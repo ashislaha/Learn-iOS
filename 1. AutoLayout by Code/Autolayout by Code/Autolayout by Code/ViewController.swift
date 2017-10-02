@@ -10,7 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    
     private var imageView : UIImageView = { // closure
         let imageView = UIImageView(image:UIImage(named: "tree"))
         imageView.translatesAutoresizingMaskIntoConstraints = false // enable autolayout
