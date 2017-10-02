@@ -9,4 +9,7 @@
     -- add a "tree" image inside top-view at the middle of top-view (centerX,centerY) and it's height and width are helf of top-view.
     -- add a text-view with some attributed string.
     
-![1](https://user-images.githubusercontent.com/10649284/31081771-862e711c-a7aa-11e7-956b-933736f3a37c.png)![2](https://user-images.githubusercontent.com/10649284/31081772-875dcc4a-a7aa-11e7-9432-31fe27d16e92.png)
+## Portrait Mode :
+![1](https://user-images.githubusercontent.com/10649284/31081771-862e711c-a7aa-11e7-956b-933736f3a37c.png)
+## Landscape Mode :
+![2](https://user-images.githubusercontent.com/10649284/31081772-875dcc4a-a7aa-11e7-9432-31fe27d16e92.png)
