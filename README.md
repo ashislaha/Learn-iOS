@@ -1,6 +1,6 @@
 # Learn-iOS
 
-## Let's begin to learn iOS. We will explore the basics of iOS Technology. Like - Auto-layout, ARC, View, ViewControllers, Animations etc..
+## Let's begin to learn iOS. We will explore the basics of iOS Technology. Like - Auto-layout, ARC, View, ViewControllers, Animations, Design Patterns, frameworks etc.. 
 
 
 ## 1. Do Auto-layout by code (not by story-boarding) : 
