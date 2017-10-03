@@ -14,7 +14,7 @@
 ## Landscape Mode :
 ![2](https://user-images.githubusercontent.com/10649284/31081772-875dcc4a-a7aa-11e7-9432-31fe27d16e92.png)
 
-## JSON Parsing using Decodable Protocol :
+## 2. JSON Parsing using Decodable Protocol :
 
 ### Model will be like : 
     struct Person : Decodable { // Properties must be the same name as specified in JSON , else it will return nil
