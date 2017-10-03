@@ -16,6 +16,14 @@
 
 ## 2. JSON Parsing using Decodable Protocol :
 
+### JSON URLS :
+    struct JsonURL {
+    static let singlePerson = "http://www.mocky.io/v2/59d30fed11000007044a05fd"
+    static let multiplePersons = "http://www.mocky.io/v2/59d3108b11000017044a05ff"
+    static let family = "http://www.mocky.io/v2/59d3120311000022044a0602"
+    }
+
+
 ### Model will be like : 
     struct Person : Decodable { // Properties must be the same name as specified in JSON , else it will return nil
      var name : String?
