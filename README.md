@@ -9,6 +9,27 @@
     -- add a "tree" image inside top-view at the middle of top-view (centerX,centerY) and it's height and width are half of top-view.
     -- add a text-view with some attributed string.
     
+## Coding 
+    
+     
+        // Configure topview , it will be the half of entire view
+        topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
+        topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true    // leading space to view left
+        topView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true  // trailing space to view right
+        topView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true      // top space to view top layout
+        topView.bottomAnchor.constraint(equalTo: textView.topAnchor).isActive = true // bottom to text view
+        
+        // configure ImageView : It will be middle of topview
+        imageView.centerXAnchor.constraint(equalTo: topView.centerXAnchor).isActive = true  // center x of topview
+        imageView.centerYAnchor.constraint(equalTo: topView.centerYAnchor).isActive = true  // center y of topview
+        imageView.heightAnchor.constraint(equalTo: topView.heightAnchor, multiplier: 0.5).isActive = true  // half of topview height
+        imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor).isActive = true   // width of imageview = height of imageview
+        
+        // configure text view : It will be bottom of topview
+        textView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true // leading
+        textView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true // trailing
+        textView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true // bottom
+    
 ## Portrait Mode :
 ![1](https://user-images.githubusercontent.com/10649284/31081771-862e711c-a7aa-11e7-956b-933736f3a37c.png)
 ## Landscape Mode :
