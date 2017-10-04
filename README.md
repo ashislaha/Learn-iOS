@@ -11,7 +11,10 @@
     
 ## Coding 
     
-     
+        topView.translatesAutoresizingMaskIntoConstraints = false // enable autolayout
+        imageView.translatesAutoresizingMaskIntoConstraints = false // enable autolayout
+        textView.translatesAutoresizingMaskIntoConstraints = false // enable autolayout
+        
         // Configure topview , it will be the half of entire view
         topView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
         topView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true    // leading space to view left
