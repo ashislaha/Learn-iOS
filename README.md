@@ -85,6 +85,8 @@
 ## 3. Create A Book Libary App consuming JSON :
 
 -- Focus on Parsing the JSON
+
 -- Use of Filters, Map, Set, Search etc.
+
 -- Please check the project for more.
 
