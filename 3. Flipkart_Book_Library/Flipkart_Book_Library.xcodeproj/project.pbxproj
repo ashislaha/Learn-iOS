@@ -1,0 +1,363 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		80C1D8311F8F3B7D00D23418 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C1D8301F8F3B7D00D23418 /* AppDelegate.swift */; };
+		80C1D8331F8F3B7D00D23418 /* BookLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C1D8321F8F3B7D00D23418 /* BookLibrary.swift */; };
+		80C1D8361F8F3B7D00D23418 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80C1D8341F8F3B7D00D23418 /* Main.storyboard */; };
+		80C1D8381F8F3B7D00D23418 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80C1D8371F8F3B7D00D23418 /* Assets.xcassets */; };
+		80C1D83B1F8F3B7D00D23418 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80C1D8391F8F3B7D00D23418 /* LaunchScreen.storyboard */; };
+		80C1D8441F8F3BD400D23418 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C1D8431F8F3BD400D23418 /* DetailsViewController.swift */; };
+		80C1D8491F8F422D00D23418 /* JSON_Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C1D8481F8F422D00D23418 /* JSON_Parser.swift */; };
+		80C1D84D1F8F534A00D23418 /* DetailCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C1D84C1F8F534A00D23418 /* DetailCellTableViewCell.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		80C1D82D1F8F3B7D00D23418 /* Flipkart_Book_Library.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Flipkart_Book_Library.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		80C1D8301F8F3B7D00D23418 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		80C1D8321F8F3B7D00D23418 /* BookLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookLibrary.swift; sourceTree = "<group>"; };
+		80C1D8351F8F3B7D00D23418 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		80C1D8371F8F3B7D00D23418 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		80C1D83A1F8F3B7D00D23418 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		80C1D83C1F8F3B7D00D23418 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		80C1D8431F8F3BD400D23418 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		80C1D8481F8F422D00D23418 /* JSON_Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSON_Parser.swift; sourceTree = "<group>"; };
+		80C1D84C1F8F534A00D23418 /* DetailCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCellTableViewCell.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		80C1D82A1F8F3B7D00D23418 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		80C1D8241F8F3B7D00D23418 = {
+			isa = PBXGroup;
+			children = (
+				80C1D82F1F8F3B7D00D23418 /* Flipkart_Book_Library */,
+				80C1D82E1F8F3B7D00D23418 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		80C1D82E1F8F3B7D00D23418 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				80C1D82D1F8F3B7D00D23418 /* Flipkart_Book_Library.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		80C1D82F1F8F3B7D00D23418 /* Flipkart_Book_Library */ = {
+			isa = PBXGroup;
+			children = (
+				80C1D8301F8F3B7D00D23418 /* AppDelegate.swift */,
+				80C1D84A1F8F428900D23418 /* Model */,
+				80C1D8451F8F3DF900D23418 /* View Controllers */,
+				80C1D8421F8F3B9300D23418 /* View */,
+				80C1D83C1F8F3B7D00D23418 /* Info.plist */,
+			);
+			path = Flipkart_Book_Library;
+			sourceTree = "<group>";
+		};
+		80C1D8421F8F3B9300D23418 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				80C1D8341F8F3B7D00D23418 /* Main.storyboard */,
+				80C1D8371F8F3B7D00D23418 /* Assets.xcassets */,
+				80C1D8391F8F3B7D00D23418 /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		80C1D8451F8F3DF900D23418 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				80C1D8321F8F3B7D00D23418 /* BookLibrary.swift */,
+				80C1D8431F8F3BD400D23418 /* DetailsViewController.swift */,
+				80C1D84C1F8F534A00D23418 /* DetailCellTableViewCell.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		80C1D84A1F8F428900D23418 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				80C1D8481F8F422D00D23418 /* JSON_Parser.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		80C1D82C1F8F3B7D00D23418 /* Flipkart_Book_Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 80C1D83F1F8F3B7D00D23418 /* Build configuration list for PBXNativeTarget "Flipkart_Book_Library" */;
+			buildPhases = (
+				80C1D8291F8F3B7D00D23418 /* Sources */,
+				80C1D82A1F8F3B7D00D23418 /* Frameworks */,
+				80C1D82B1F8F3B7D00D23418 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Flipkart_Book_Library;
+			productName = Flipkart_Book_Library;
+			productReference = 80C1D82D1F8F3B7D00D23418 /* Flipkart_Book_Library.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		80C1D8251F8F3B7D00D23418 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "Ashis Laha";
+				TargetAttributes = {
+					80C1D82C1F8F3B7D00D23418 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 80C1D8281F8F3B7D00D23418 /* Build configuration list for PBXProject "Flipkart_Book_Library" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 80C1D8241F8F3B7D00D23418;
+			productRefGroup = 80C1D82E1F8F3B7D00D23418 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				80C1D82C1F8F3B7D00D23418 /* Flipkart_Book_Library */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		80C1D82B1F8F3B7D00D23418 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80C1D83B1F8F3B7D00D23418 /* LaunchScreen.storyboard in Resources */,
+				80C1D8381F8F3B7D00D23418 /* Assets.xcassets in Resources */,
+				80C1D8361F8F3B7D00D23418 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		80C1D8291F8F3B7D00D23418 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80C1D84D1F8F534A00D23418 /* DetailCellTableViewCell.swift in Sources */,
+				80C1D8331F8F3B7D00D23418 /* BookLibrary.swift in Sources */,
+				80C1D8311F8F3B7D00D23418 /* AppDelegate.swift in Sources */,
+				80C1D8491F8F422D00D23418 /* JSON_Parser.swift in Sources */,
+				80C1D8441F8F3BD400D23418 /* DetailsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		80C1D8341F8F3B7D00D23418 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				80C1D8351F8F3B7D00D23418 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		80C1D8391F8F3B7D00D23418 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				80C1D83A1F8F3B7D00D23418 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		80C1D83D1F8F3B7D00D23418 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		80C1D83E1F8F3B7D00D23418 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		80C1D8401F8F3B7D00D23418 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 87F557PJ6U;
+				INFOPLIST_FILE = Flipkart_Book_Library/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ALaha.Flipkart-Book-Library";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		80C1D8411F8F3B7D00D23418 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 87F557PJ6U;
+				INFOPLIST_FILE = Flipkart_Book_Library/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "ALaha.Flipkart-Book-Library";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		80C1D8281F8F3B7D00D23418 /* Build configuration list for PBXProject "Flipkart_Book_Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				80C1D83D1F8F3B7D00D23418 /* Debug */,
+				80C1D83E1F8F3B7D00D23418 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		80C1D83F1F8F3B7D00D23418 /* Build configuration list for PBXNativeTarget "Flipkart_Book_Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				80C1D8401F8F3B7D00D23418 /* Debug */,
+				80C1D8411F8F3B7D00D23418 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 80C1D8251F8F3B7D00D23418 /* Project object */;
+}
