@@ -3,7 +3,7 @@
 ## Let's begin to learn iOS. We will explore the basics of iOS Technology. Like - Auto-layout, ARC, View, ViewControllers, Animations, Design Patterns, frameworks etc.. 
 
 
-## 1. Do Auto-layout by code (not by story-boarding) : 
+## Do Auto-layout by code (not by story-boarding) : 
     
     -- Create a TopView with Half height of ViewController view.
     -- add a "tree" image inside top-view at the middle of top-view (centerX,centerY) and it's height and width are half of top-view.
@@ -40,7 +40,9 @@
 
 ## Explore CollectionView without storyboard designing :
 
-![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 14 36](https://user-images.githubusercontent.com/10649284/32141339-0c983662-bca4-11e7-8f05-f545a0589c04.png)
+
+![image](https://user-images.githubusercontent.com/10649284/32141413-74d76c60-bca5-11e7-8152-7eee17869a53.png)
+
 
 ### Step 1 : Register Views : 
 
@@ -201,8 +203,7 @@ extension HomeCollectionViewController {
         pageControl.currentPage = index
     }
 
-![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 14 36](https://user-images.githubusercontent.com/10649284/32141339-0c983662-bca4-11e7-8f05-f545a0589c04.png)
-
+![image](https://user-images.githubusercontent.com/10649284/32141413-74d76c60-bca5-11e7-8152-7eee17869a53.png)
 
 
 ## 2. JSON Parsing using Decodable Protocol :
