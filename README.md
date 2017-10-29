@@ -40,8 +40,9 @@
 
 ## Explore CollectionView without storyboard designing :
 
+LandScape Output :
 
-![image](https://user-images.githubusercontent.com/10649284/32141413-74d76c60-bca5-11e7-8152-7eee17869a53.png)
+![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 35 38](https://user-images.githubusercontent.com/10649284/32141425-b4246f08-bca5-11e7-8108-26f26d068143.png)
 
 
 ### Step 1 : Register Views : 
@@ -54,8 +55,8 @@
     
 ### Step 2 : Data Source :
 
-// UICollectionViewDataSource
-extension HomeCollectionViewController {
+    // UICollectionViewDataSource
+    extension HomeCollectionViewController {
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -91,7 +92,7 @@ extension HomeCollectionViewController {
 
 ### Step 3 : Delegate and DelegateFlowLayout for positioning the cells and Supplementary views (like Header, Footer )
     
-        // UICollectionViewDelegate
+    // UICollectionViewDelegate
     extension HomeCollectionViewController  {
         override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
            print("tapped : \(indexPath)")
@@ -121,7 +122,7 @@ extension HomeCollectionViewController {
 
 ### Step 4 : Adding a Page Control using Stack View :
 
-        // add a page control with prev and next button
+    // add a page control with prev and next button
     private var prevBtn : UIButton = {
         let button = UIButton()
         button.setTitle("Prev", for: .normal)
@@ -173,7 +174,7 @@ extension HomeCollectionViewController {
 
 ### Step 5 : Adding Functionality of Next and Prev Button :
 
-         @objc private func nextBtnTapped() {
+    @objc private func nextBtnTapped() {
         // change the page control
         let currentPage = pageControl.currentPage
         let nextPage = min(currentPage + 1, dataSource.count-1)
@@ -203,8 +204,7 @@ extension HomeCollectionViewController {
         pageControl.currentPage = index
     }
 
-![image](https://user-images.githubusercontent.com/10649284/32141413-74d76c60-bca5-11e7-8152-7eee17869a53.png)
-
+![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 35 38](https://user-images.githubusercontent.com/10649284/32141425-b4246f08-bca5-11e7-8108-26f26d068143.png)
 
 ## 2. JSON Parsing using Decodable Protocol :
 
