@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  Autolayout by Code
+//  CollectionViewExplore
 //
-//  Created by Ashis Laha on 02/10/17.
+//  Created by Ashis Laha on 26/10/17.
 //  Copyright © 2017 Ashis Laha. All rights reserved.
 //
 
@@ -15,15 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
-        window = UIWindow()
-        window?.makeKeyAndVisible()
-        
-        let layout =  UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let homeController = HomeCollectionViewController(collectionViewLayout:layout)
-        window?.rootViewController = UINavigationController(rootViewController: homeController)
-        
+        // Override point for customization after application launch.
         return true
     }
 
