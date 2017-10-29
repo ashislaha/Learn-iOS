@@ -3,7 +3,7 @@
 ## Let's begin to learn iOS. We will explore the basics of iOS Technology. Like - Auto-layout, ARC, View, ViewControllers, Animations, Design Patterns, frameworks etc.. 
 
 
-## Do Auto-layout by code (not by story-boarding) : 
+## PROJECT 1 : Do Auto-layout by code (not by story-boarding) : 
     
     -- Create a TopView with Half height of ViewController view.
     -- add a "tree" image inside top-view at the middle of top-view (centerX,centerY) and it's height and width are half of top-view.
@@ -206,7 +206,7 @@ LandScape Output :
 
 ![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 35 38](https://user-images.githubusercontent.com/10649284/32141425-b4246f08-bca5-11e7-8108-26f26d068143.png)
 
-## 2. JSON Parsing using Decodable Protocol :
+## PROJECT 2. JSON Parsing using Decodable Protocol :
 
 ### JSON URLS :
     struct JsonURL {
@@ -250,11 +250,102 @@ LandScape Output :
 
 ## Check the others parsing in repo.
 
-## 3. Create A Book Libary App consuming JSON :
+## PROJECT 3. Create A Book Libary App consuming JSON :
 
 -- Focus on Parsing the JSON
 
 -- Use of Filters, Map, Set, Search etc.
 
 -- Please check the project for more.
+
+## PROJECT 4 : Explore More On Collection View :
+
+Please check the Project 1 where autolayout is done without storyboard with collection view.
+
+### OverView : 
+
+A collection view manages a ordered collection of data items and presents them using customisation layouts.
+
+— Consists of following components : 1. collection view cell 2. Supplementary view (Header and footer view ).
+— The main job of App is managing data associated with collection view cell. App will conform UICollectionViewDataSource protocol. Data can be organised in several sections. Each item is a UICollectionViewCell . 
+— You can do insert, delete, rearrange of cells in collection view using delegate methods .
+
+### Collection Views and Layout objects : 
+
+A very import object associated with collection view is layout object which is a subclass of UICollectionViewLayout class. It is responsible for defining the positions of all cells and supplementary views inside collection view . In other sense, Layout object is a kind of data source which provides visual information instead of data.
+
+— Normally define the Layout object while creating the collection view, you can change the layout object dynamically.
+
+— Setting the layout property (collectionViewLayout) in collection view directly update the layout effect in collection view without animation.  If you want animation using this method :  
+   
+    func setCollectionViewLayout(UICollectionViewLayout, animated: Bool, completion: ((Bool) -> Void)? = nil)
+
+—  If you want to change layout using Gestures , use InteractiveTransition methods. 
+
+    func startInteractiveTransition(to: UICollectionViewLayout, completion: UICollectionViewLayoutInteractiveTransitionCompletion? = nil)
+    func finishInteractiveTransition()  ( when the transition is finished )
+    func cancelInteractiveTransition() 
+
+### Create supplementary views and cells : 
+
+When the collection view content is loaded first time, collection view asks it’s data source to give a visible cell.
+— use dequeueReusableCell(withIdentifier : String) used for cell.
+— use dequeueReusableSupplementaryView(withIdentifier : String ) used for supplementary view.
+
+Before that you must register cell with an reusable identifier. 
+
+### Reordering Items Interactively :
+
+Collection view allows user to move items using gestures.  Normally the order is as per the data source.  But you can configure gesture recogniser to track the user interactions of a collection view item and update the item’s position.  
+
+-- To Begin the interactive repositioning an item :  beginInteractiveMovementForItem(at :)
+
+-- While the Gesture recogniser is tracking touch events ,  updateInteractiveMovementTargetPosition(_:)  is reporting to touch location . 
+
+-- When you are done the tracking, call endInteractiveMovement() and update the collection view. OR call cancelInteractivemovement() to cancel 
+
+## Ordering cells in Collection View using Gestures : 
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress(gesture:)))
+        collectionView.addGestureRecognizer(longPress)
+    }
+    
+    @objc private func longPress(gesture : UILongPressGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            guard let indexpath = collectionView.indexPathForItem(at: gesture.location(in: collectionView)) else { break }
+            collectionView.beginInteractiveMovementForItem(at: indexpath)
+            
+        case .changed :
+            collectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
+            
+        case .ended:
+            collectionView.endInteractiveMovement()
+            
+        default:
+            collectionView.cancelInteractiveMovement()
+        }
+    }
+    
+    // Interactive movements in UICollectionViewDataSource method : 
+    
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        isInteractiveMode = true
+        source = sourceIndexPath
+        destination = destinationIndexPath
+        // best way to do is to update the model so that next time while scrolling the collection view, it will not reset the items.
+    }
+    
+        func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellIdentifier, for: indexPath) as? CustomCollectionViewCell else { return UICollectionViewCell() }
+        
+        cell.model =  isInteractiveMode ? CellModel(imageName: "car_\(source.row+1)", imageTitle: "Car") : CellModel(imageName: "car_\(indexPath.row+1)", imageTitle: "Car")
+        isInteractiveMode = false // once done user interactive
+        return cell
+    }
+
 
