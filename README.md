@@ -388,7 +388,7 @@ I am trying to create the basic structure of twitter like cell using collection 
             self.widthAnchor.constraint(equalToConstant: widthConstants).isActive = true
         }
     }
-}
+    }
 
 ### User Cell : 
 
@@ -497,6 +497,50 @@ I am trying to create the basic structure of twitter like cell using collection 
         // seperator view
         seperatorView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 1, widthConstants: 0)
     }
-}
+    }
 
+### Stack View (Red-Green-Blue-Purple) : 
 
+    // controls stack view
+    private let stackView : UIStackView = {
+        let redView = UIView()
+        redView.backgroundColor = .red
+        let icon1 = UIButton()
+        icon1.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon1.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        redView.addSubview(icon1)
+        
+        let greenView = UIView()
+        greenView.backgroundColor = .green
+        let icon2 = UIButton()
+        icon2.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon2.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        greenView.addSubview(icon2)
+        
+        let blueView = UIView()
+        blueView.backgroundColor = .blue
+        let icon3 = UIButton()
+        icon3.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon3.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        blueView.addSubview(icon3)
+
+        let purpleView = UIView()
+        purpleView.backgroundColor = .purple
+        let icon4 = UIButton()
+        icon4.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon4.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        purpleView.addSubview(icon4)
+        
+        let stack = UIStackView(arrangedSubviews: [redView, greenView, blueView, purpleView])
+        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        
+        return stack
+    }()
+
+### Anchoring Stack View :
+
+    // stack view
+    stackView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 40, widthConstants: 0)
+    
+    
