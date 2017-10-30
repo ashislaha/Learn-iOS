@@ -12,23 +12,34 @@ let desc : String = "I am Ashis, working on iOS Development mostly. Worked on Ma
 
 class HomeViewController: UICollectionViewController {
     
-    var dataSource : [Item] = [
-        Item(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
-        Item(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
-        Item(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
-        Item(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc)
+    var dataSource : [User] = [
+        User(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
+        User(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
+        User(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc),
+        User(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc)
     ]
+    
+    var tweets : [Tweet] = {
+        
+        let user = User(profileImageName: "profile", name: "Ashis Laha", username: "@ashislaha", bio: desc)
+        let tweet1 = Tweet(user: user, message: "This is a new tweet message. We are trying to learn iOS with collection view")
+        let tweet2 = Tweet(user: user, message: "This is a new tweet message. We are trying to learn iOS with collection view")
+        return [tweet1, tweet2]
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
+        title = "Tweeter"
         registerViews()
     }
     
     private func registerViews() {
-        collectionView?.register(HomeCell.self, forCellWithReuseIdentifier: Constants.cellID)
-        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: Constants.headerID)
-        collectionView?.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: Constants.footerID)
+        collectionView?.register(UserCell.self, forCellWithReuseIdentifier: Constants.cellID)
+        collectionView?.register(TweetCell.self, forCellWithReuseIdentifier: Constants.tweetID)
+        
+        collectionView?.register(UserHeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: Constants.headerID)
+        collectionView?.register(UserFooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: Constants.footerID)
     }
     
 }
@@ -37,15 +48,24 @@ class HomeViewController: UICollectionViewController {
 extension HomeViewController {
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 2
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 1 {
+            return tweets.count
+        }
         return dataSource.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as? HomeCell else { return UICollectionViewCell() }
+        if indexPath.section == 1 {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.tweetID, for: indexPath) as? TweetCell else { return UICollectionViewCell() }
+            cell.model = tweets[indexPath.row]
+            return cell
+        }
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.cellID, for: indexPath) as? UserCell else { return UICollectionViewCell() }
         cell.dataModel = dataSource[indexPath.row]
         return cell
     }
@@ -54,12 +74,10 @@ extension HomeViewController {
         
         if kind == UICollectionElementKindSectionHeader {
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.headerID, for: indexPath)
-            header.backgroundColor = .green
             return header
             
         } else if kind == UICollectionElementKindSectionFooter {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: Constants.footerID, for: indexPath)
-            footer.backgroundColor = .red
             return footer
 
         }
@@ -81,9 +99,11 @@ extension HomeViewController : UICollectionViewDelegateFlowLayout {
         return CGSize(width: self.view.frame.width, height: 200)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 100)
+        if section == 1 { return .zero }
+        return CGSize(width: self.view.frame.width, height: 50)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: self.view.frame.width, height: 100)
+        if section == 1 { return .zero }
+        return CGSize(width: self.view.frame.width, height: 50)
     }
 }

@@ -10,15 +10,19 @@ import UIKit
 
 struct Constants {
     static let cellID = "cellID"
+    static let tweetID = "tweetID"
     static let headerID = "headerID"
     static let footerID = "footerID"
 }
 
-struct Item {
-    
-    var profileImageName : String
-    var name : String
-    var username : String
-    var bio : String
-    
+struct User {
+    let profileImageName : String
+    let name : String
+    let username : String
+    let bio : String
+}
+
+struct Tweet {
+    let user : User
+    let message : String
 }
