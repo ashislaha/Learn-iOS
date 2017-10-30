@@ -354,7 +354,7 @@ Collection view allows user to move items using gestures.  Normally the order is
 I am trying to create the basic structure of twitter like cell using collection view with auto-layout.
 
 ### User cell : 
-![simulator screen shot - iphone 8 plus - 2017-10-30 at 11 08 52](https://user-images.githubusercontent.com/10649284/32156540-1b7862a4-bd64-11e7-9b23-1d44ad003c30.png)
+![simulator screen shot - iphone 8 plus - 2017-10-30 at 11 28 49](https://user-images.githubusercontent.com/10649284/32156812-8e7426c0-bd65-11e7-98e2-ae15c44e7b60.png)
 
 ### Tweet cell : 
 ![simulator screen shot - iphone 8 plus - 2017-10-30 at 11 10 33](https://user-images.githubusercontent.com/10649284/32156542-1d816dac-bd64-11e7-96a5-6c7e666eb1bf.png)
