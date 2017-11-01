@@ -349,3 +349,198 @@ Collection view allows user to move items using gestures.  Normally the order is
     }
 
 
+## PROJECT 5 : TWITTER / YOUTUBE : 
+
+I am trying to create the basic structure of twitter like cell using collection view with auto-layout.
+
+### User cell : 
+![simulator screen shot - iphone 8 plus - 2017-10-30 at 11 28 49](https://user-images.githubusercontent.com/10649284/32156812-8e7426c0-bd65-11e7-98e2-ae15c44e7b60.png)
+
+### Tweet cell : 
+![simulator screen shot - iphone 8 plus - 2017-10-30 at 11 30 55](https://user-images.githubusercontent.com/10649284/32156863-cfa1d106-bd65-11e7-9cc5-331e448ee7c9.png)
+
+### Few basic reusability code :
+
+### Anchoring between views : 
+
+    extension UIView {
+    
+    func anchors(top : NSLayoutYAxisAnchor?, topConstants : CGFloat, left : NSLayoutXAxisAnchor?, leftConstants : CGFloat, bottom : NSLayoutYAxisAnchor?, bottomConstants : CGFloat, right : NSLayoutXAxisAnchor?,  rightConstants : CGFloat, heightConstants : CGFloat, widthConstants : CGFloat ) {
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let top = top {
+            self.topAnchor.constraint(equalTo: top, constant: topConstants).isActive = true
+        }
+        if let left = left {
+            self.leftAnchor.constraint(equalTo: left, constant: leftConstants).isActive = true
+        }
+        if let bottom = bottom {
+            self.bottomAnchor.constraint(equalTo: bottom, constant: bottomConstants).isActive = true
+        }
+        if let right = right {
+            self.rightAnchor.constraint(equalTo: right, constant: rightConstants).isActive = true
+        }
+        if heightConstants > 0 {
+            self.heightAnchor.constraint(equalToConstant: heightConstants).isActive = true
+        }
+        if widthConstants > 0 {
+            self.widthAnchor.constraint(equalToConstant: widthConstants).isActive = true
+        }
+    }
+    }
+
+### User Cell : 
+
+    class UserCell : UICollectionViewCell {
+    
+    var dataModel : User? {
+        didSet {
+            userProfilePic.image = UIImage(named :dataModel?.profileImageName ?? "")
+            name.text = dataModel?.name
+            username.text = dataModel?.username
+            bio.text = dataModel?.bio
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        viewSetup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // user profile picture
+    private let userProfilePic  : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 5
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+    
+    // name
+    private let name : UILabel = {
+        let label = UILabel()
+        label.text = "name"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    // username
+    private let username : UILabel = {
+        let label = UILabel()
+        label.text = "username"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    // bio description
+    private let bio : UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .clear
+        return textView
+    }()
+    
+    // follow button
+    private let followBtn : UIButton = {
+        let button = UIButton()
+        button.setTitle("Follow", for: .normal)
+        button.layer.cornerRadius = 5
+        button.layer.borderColor = UIColor.cyan.cgColor
+        button.layer.borderWidth = 1
+        button.setTitleColor(UIColor.cyan, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    // seperator
+    private let seperatorView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        return view
+    }()
+    
+    
+    private func viewSetup() {
+        addSubview(userProfilePic)
+        addSubview(name)
+        addSubview(username)
+        addSubview(bio)
+        addSubview(followBtn)
+        addSubview(seperatorView)
+        layoutSetup()
+    }
+    
+    private func layoutSetup() {
+        // adding constraints
+        
+        // user profile
+        userProfilePic.anchors(top: topAnchor, topConstants: 8, left: leftAnchor, leftConstants: 8, bottom: nil, bottomConstants: 0, right: nil, rightConstants: 0, heightConstants: 88, widthConstants: 88)
+        
+        // name
+        name.anchors(top: topAnchor, topConstants: 8, left: userProfilePic.rightAnchor, leftConstants: 8, bottom: nil, bottomConstants: 0, right: followBtn.leftAnchor, rightConstants: 0, heightConstants: 0, widthConstants: 0)
+        
+        // username
+        username.anchors(top: name.bottomAnchor, topConstants: 8, left: name.leftAnchor, leftConstants: 0, bottom: nil, bottomConstants: 0, right: name.rightAnchor, rightConstants: 0, heightConstants: 0, widthConstants: 0)
+        
+        // bio text
+        bio.anchors(top: userProfilePic.bottomAnchor, topConstants: 8, left: leftAnchor, leftConstants: 8, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 0, widthConstants: 0)
+        
+        // followBtn
+        followBtn.anchors(top: topAnchor, topConstants: 8, left: nil, leftConstants: 0, bottom: nil, bottomConstants: 0, right: rightAnchor, rightConstants: -8, heightConstants: 30, widthConstants: 88)
+        
+        // seperator view
+        seperatorView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 1, widthConstants: 0)
+    }
+    }
+
+### Stack View (Red-Green-Blue-Purple) : 
+
+    // controls stack view
+    private let stackView : UIStackView = {
+        let redView = UIView()
+        redView.backgroundColor = .red
+        let icon1 = UIButton()
+        icon1.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon1.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        redView.addSubview(icon1)
+        
+        let greenView = UIView()
+        greenView.backgroundColor = .green
+        let icon2 = UIButton()
+        icon2.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon2.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        greenView.addSubview(icon2)
+        
+        let blueView = UIView()
+        blueView.backgroundColor = .blue
+        let icon3 = UIButton()
+        icon3.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon3.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        blueView.addSubview(icon3)
+
+        let purpleView = UIView()
+        purpleView.backgroundColor = .purple
+        let icon4 = UIButton()
+        icon4.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        icon4.setImage(#imageLiteral(resourceName: "icon"), for: .normal)
+        purpleView.addSubview(icon4)
+        
+        let stack = UIStackView(arrangedSubviews: [redView, greenView, blueView, purpleView])
+        stack.distribution = .fillEqually
+        stack.axis = .horizontal
+        
+        return stack
+    }()
+
+### Anchoring Stack View :
+
+    // stack view
+    stackView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 40, widthConstants: 0)
+    
+    
