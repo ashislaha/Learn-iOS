@@ -13,7 +13,7 @@ class UserHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        backgroundColor = Constants.sepratorColor
         viewSetups()
     }
     
@@ -32,7 +32,7 @@ class UserHeaderView: UICollectionReusableView {
     private let seperatorView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        view.backgroundColor = Constants.sepratorColor
         return view
     }()
     
@@ -53,7 +53,7 @@ class UserFooterView : UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        backgroundColor = Constants.sepratorColor
         viewSetups()
     }
     
@@ -65,7 +65,7 @@ class UserFooterView : UICollectionReusableView {
     private let seperatorView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        view.backgroundColor = Constants.sepratorColor
         return view
     }()
     

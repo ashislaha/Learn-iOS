@@ -30,18 +30,18 @@ class HomeViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
-        title = "Tweeter"
+        title = "Twitter"
         registerViews()
+        collectionView?.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        collectionView?.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, 0)
     }
     
     private func registerViews() {
         collectionView?.register(UserCell.self, forCellWithReuseIdentifier: Constants.cellID)
         collectionView?.register(TweetCell.self, forCellWithReuseIdentifier: Constants.tweetID)
-        
         collectionView?.register(UserHeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: Constants.headerID)
         collectionView?.register(UserFooterView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: Constants.footerID)
     }
-    
 }
 
 // UICollectionViewDataSource
@@ -83,7 +83,6 @@ extension HomeViewController {
         }
         return UICollectionReusableView()
     }
-    
 }
 
 // UICollectionViewDelegate

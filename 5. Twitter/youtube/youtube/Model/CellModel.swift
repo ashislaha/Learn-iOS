@@ -13,6 +13,8 @@ struct Constants {
     static let tweetID = "tweetID"
     static let headerID = "headerID"
     static let footerID = "footerID"
+    static let decorationView = "decorationView"
+    static let sepratorColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
 }
 
 struct User {

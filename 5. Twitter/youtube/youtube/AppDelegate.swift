@@ -19,8 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.makeKeyAndVisible()
         
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
+        let layout = MyCustomLayout()
         let controller = HomeViewController(collectionViewLayout: layout)
         window?.rootViewController = UINavigationController(rootViewController: controller)
         
