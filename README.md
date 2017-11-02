@@ -544,7 +544,7 @@ I am trying to create the basic structure of twitter like cell using collection 
     stackView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 40, widthConstants: 0)
     
 
-# PROJECT 5 : TABLE VIEW EXPLORE :
+# PROJECT 6 : TABLE VIEW EXPLORE :
 
 ## (1). Resize Cell based on content and Expand cell dynamically: 
 
