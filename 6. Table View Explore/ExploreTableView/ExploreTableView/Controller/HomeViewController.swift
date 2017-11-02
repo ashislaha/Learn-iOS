@@ -29,17 +29,25 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // resize based on content
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 100
-        tableView.reloadData()
+        registers()
+        tableViewSetup()
     }
     
     private func registers() {
-        tableView.register(UserCell.self, forCellReuseIdentifier: Constants.cellID)
         tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: Constants.headerID)
         tableView.register(FooterView.self, forHeaderFooterViewReuseIdentifier: Constants.footerID)
     }
+    
+    private func tableViewSetup() {
+        // resize based on content
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        tableView.reloadData()
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+
 }
 
 extension HomeViewController : UITableViewDataSource {
@@ -56,6 +64,25 @@ extension HomeViewController : UITableViewDataSource {
         cell.selectionStyle = .none
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.headerID) as? HeaderView else{ return nil }
+        header.viewSetup()
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.footerID) as? FooterView else {return nil }
+        footerView.viewSetup()
+        return footerView
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 50
+    }
 }
 
 extension HomeViewController : UITableViewDelegate {
@@ -68,8 +95,7 @@ extension HomeViewController : UITableViewDelegate {
         // model
         dataSource[indexPath.row].isExpand = !dataSource[indexPath.row].isExpand
         dataSource[indexPath.row].more =  dataSource[indexPath.row].isExpand ? Constants.desc3 : "More to tapped"
-        
-        cell.model = dataSource[indexPath.row] // call the cell
+        cell.model = dataSource[indexPath.row] // update the view
         
         tableView.beginUpdates()
         tableView.endUpdates()

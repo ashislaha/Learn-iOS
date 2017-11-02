@@ -28,7 +28,15 @@ class UserCell: UITableViewCell {
         }
     }
     
-    @IBOutlet private weak var profilePic: UIImageView!
+    @IBOutlet private weak var profilePic: UIImageView! {
+        didSet {
+            profilePic.layer.cornerRadius = 10
+            profilePic.layer.borderColor = UIColor.black.cgColor
+            profilePic.layer.borderWidth = 3
+            profilePic.layer.masksToBounds = true
+            //profilePic.clipsToBounds = true
+        }
+    }
     @IBOutlet private weak var name: UILabel! {
         didSet {
             name.font = UIFont.preferredFont(forTextStyle: .headline)
@@ -37,39 +45,22 @@ class UserCell: UITableViewCell {
     @IBOutlet private weak var username: UILabel!
     @IBOutlet weak var bio: UILabel! {
         didSet {
-            bio.numberOfLines = 0 // this is important for auto resizing
-            // This will increase the label height based on content. This is similar to UITextView disabling Scroll enabled feature to increase the text view size.
+            bio.numberOfLines = 0
+            // this is important for auto resizing
+            // This will increase the label height based on content.
+            // This is similar to UITextView disabling Scroll enabled feature to increase the text view size.
             bio.textColor = .red
             bio.textAlignment = .left
             bio.font = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
-    @IBOutlet weak var more: UITextView! {
+    @IBOutlet private weak var more: UITextView! {
         didSet {
             more.isScrollEnabled = false
             more.isUserInteractionEnabled = false
             more.textColor = .blue
-            
         }
     }
-    
 }
-
-class HeaderView : UITableViewHeaderFooterView {
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .red
-    }
-}
-
-class FooterView : UITableViewHeaderFooterView {
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .blue
-    }
-}
-
 

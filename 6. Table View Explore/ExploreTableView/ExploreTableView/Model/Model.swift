@@ -24,6 +24,6 @@ struct User {
     let username : String
     let bio : String
     var more : String
-    var isExpand : Bool = false
+    var isExpand : Bool 
 }
 
