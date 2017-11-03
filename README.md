@@ -2,8 +2,9 @@
 
 ## Let's begin to learn iOS. We will explore the basics of iOS Technology. Like - Auto-layout, ARC, View, ViewControllers, Animations, Design Patterns, frameworks etc.. 
 
-
-## PROJECT 1 : Do Auto-layout by code (not by story-boarding) : 
+*******************************************************************************************************
+# PROJECT 1 : Do Auto-layout by code (not by story-boarding) : 
+*******************************************************************************************************
     
     -- Create a TopView with Half height of ViewController view.
     -- add a "tree" image inside top-view at the middle of top-view (centerX,centerY) and it's height and width are half of top-view.
@@ -206,7 +207,11 @@ LandScape Output :
 
 ![simulator screen shot - iphone 8 plus - 2017-10-29 at 12 35 38](https://user-images.githubusercontent.com/10649284/32141425-b4246f08-bca5-11e7-8108-26f26d068143.png)
 
-## PROJECT 2. JSON Parsing using Decodable Protocol :
+
+*******************************************************************************************************
+# PROJECT 2. JSON Parsing using Decodable Protocol :
+*******************************************************************************************************
+
 
 ### JSON URLS :
     struct JsonURL {
@@ -250,7 +255,10 @@ LandScape Output :
 
 ## Check the others parsing in repo.
 
-## PROJECT 3. Create A Book Libary App consuming JSON :
+
+*******************************************************************************************************
+# PROJECT 3. Create A Book Libary App consuming JSON :
+*******************************************************************************************************
 
 -- Focus on Parsing the JSON
 
@@ -258,7 +266,11 @@ LandScape Output :
 
 -- Please check the project for more.
 
-## PROJECT 4 : Explore More On Collection View :
+
+*******************************************************************************************************
+# PROJECT 4 : Explore More On Collection View :
+*******************************************************************************************************
+
 
 Please check the Project 1 where autolayout is done without storyboard with collection view.
 
@@ -349,7 +361,9 @@ Collection view allows user to move items using gestures.  Normally the order is
     }
 
 
-## PROJECT 5 : TWITTER / YOUTUBE : 
+*******************************************************************************************************
+# PROJECT 5 : TWITTER / YOUTUBE : 
+*******************************************************************************************************
 
 I am trying to create the basic structure of twitter like cell using collection view with auto-layout.
 
@@ -544,7 +558,10 @@ I am trying to create the basic structure of twitter like cell using collection 
     stackView.anchors(top: nil, topConstants: 0, left: leftAnchor, leftConstants: 0, bottom: bottomAnchor, bottomConstants: 0, right: rightAnchor, rightConstants: 0, heightConstants: 40, widthConstants: 0)
     
 
+*******************************************************************************************************
 # PROJECT 6 : TABLE VIEW EXPLORE :
+*******************************************************************************************************
+
 
 ## (1). Resize Cell based on content and Expand cell dynamically: 
 
@@ -577,6 +594,7 @@ I am trying to create the basic structure of twitter like cell using collection 
 ### (b) Expand Cell on tapped of cell : 
 ![simulator screen shot - iphone 7 - 2017-11-01 at 19 18 19](https://user-images.githubusercontent.com/10649284/32278150-b932f7ac-bf3a-11e7-8ffe-16ac1c6829ff.png)
 
+### Data Source : 
     extension HomeViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -610,7 +628,9 @@ I am trying to create the basic structure of twitter like cell using collection 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 50
     }
-}
+    }
+
+### Delegate 
 
     extension HomeViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -628,12 +648,257 @@ I am trying to create the basic structure of twitter like cell using collection 
         tableView.endUpdates()
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
-}
+    }
 
 
+*******************************************************************************************************
+# PROJECT 7 : Table View With Pan Gesture to delete and Search Controller 
+*******************************************************************************************************
+
+### Added Pan Gesture (right to left) to delete the item from Table View : 
+
+![simulator screen shot - iphone se - 2017-11-03 at 10 41 48](https://user-images.githubusercontent.com/10649284/32361439-674266a6-c086-11e7-9865-67c14925cdb1.png)
+
+    
+    class UserCell: UITableViewCell {
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    private let gradient = CAGradientLayer()
+    private var originalCenter = CGPoint()
+    private var deleteOnDragRelease = false
+    
+    // used for delegation for deletion
+    var indexPath : IndexPath?
+    var delegate : TasksUpdateDelegate?
+    
+    private func viewSetup() {
+        selectionStyle = .none
+        // setup gradients
+        gradient.frame = bounds
+        gradient.colors = [UIColor(white: 1.0, alpha: 0.2).cgColor, UIColor(white: 1.0, alpha: 0.1).cgColor, UIColor(red: 0, green: 0, blue: 1, alpha: 0.2).cgColor]
+        gradient.locations = [0.0, 0.01, 1.0]
+        layer.insertSublayer(gradient, at: 0)
+    }
+    
+    private func addPanGesture() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(gesture:)))
+        pan.delegate = self
+        addGestureRecognizer(pan)
+    }
+    
+    @objc func handlePan(gesture : UIPanGestureRecognizer) {
+
+        switch gesture.state {
+        case .began:
+            originalCenter = center // center of cell
+        
+        case .changed:
+            let translation = gesture.translation(in: self)
+            center = CGPoint(x: translation.x + originalCenter.x, y: originalCenter.y)
+            deleteOnDragRelease = frame.origin.x < (-frame.size.width / 2.0)
+        
+        case .ended:
+            let originalFrame = CGRect(x: 0, y: frame.origin.y, width: bounds.size.width, height: bounds.size.height)
+            if !deleteOnDragRelease { // back to original position
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.frame = originalFrame
+                })
+            } else { // delete the cell
+                if let delegate = delegate, let indexPath = indexPath {
+                    delegate.delete(indexPath: indexPath)
+                }
+            }
+        default: break
+        }
+    }
+    
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else { return false }
+        let tranlation = panGesture.translation(in: superview!)
+        return fabs(tranlation.x) > fabs(tranlation.y)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        viewSetup()
+        addPanGesture()
+    }
+    
+    var model : Task? {
+        didSet {
+            desc.text = model?.description ?? ""
+        }
+    }
+
+    @IBOutlet weak var desc: UILabel! {
+        didSet {
+            desc.numberOfLines = 0
+            // this is important for auto resizing
+            // This will increase the label height based on content.
+            // This is similar to UITextView disabling Scroll enabled feature to increase the text view size.
+            desc.textColor = .black
+            desc.textAlignment = .left
+            desc.font = UIFont.preferredFont(forTextStyle: .body)
+        }
+    }
+    }
 
 
+Controller is listening which cell is to be deleted :
+
+    extension BaseViewController : TasksUpdateDelegate {
+    func delete(indexPath: IndexPath) {
+        // delete the item from data source and reload the tableview
+        guard indexPath.row < dataSource.count else { return }
+        dataSource.remove(at: indexPath.row)
+        
+        // tableView.reloadData()
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [indexPath], with: .middle)
+        tableView.endUpdates()
+    }
+    }
 
 
+### Add Search Controller with ScopeBar : 
+
+![simulator screen shot - iphone se - 2017-11-03 at 10 35 05](https://user-images.githubusercontent.com/10649284/32361494-f854add4-c086-11e7-9e7d-098aa7771e3e.png)
+
+### (A) Search Set-up :
+
+    let searchController = UISearchController(searchResultsController: nil)
+    var filtered : [Task] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Table view with gestures and search"
+        registers()
+        tableViewSetup()
+        searchSetup()
+    }
+    
+    private func registers() {
+        tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: Constants.headerID)
+        tableView.register(FooterView.self, forHeaderFooterViewReuseIdentifier: Constants.footerID)
+    }
+    
+    private func tableViewSetup() {
+        // resize based on content
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        tableView.reloadData()
+        tableView.contentInset = UIEdgeInsets(top: 0 , left: 0, bottom: 0, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    
+    private func searchSetup() {
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "search"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        // setup scope bar
+        searchController.searchBar.scopeButtonTitles = ["All","p1","p2","p3"]
+    }
+    
+    private func isSearchBarEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    private func isFilteringActive() -> Bool {
+        let isSearchTextEmpty = isSearchBarEmpty()
+        let isSearchBarScopeEmpty = searchController.searchBar.selectedScopeButtonIndex == 0
+        return searchController.isActive && (!isSearchTextEmpty || !isSearchBarScopeEmpty)
+    }
+
+### (B) Data Source :
+
+    extension BaseViewController : UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isFilteringActive() {
+            return filtered.count
+        }
+        return dataSource.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellID, for: indexPath) as? UserCell else { return UITableViewCell() }
+        
+        cell.model = isFilteringActive() ?  filtered[indexPath.row] : dataSource[indexPath.row]
+        
+        if !isFilteringActive() {
+            cell.delegate = self
+            cell.indexPath = indexPath
+        }
+        cell.backgroundColor = colorAtIndexPath(indexPath)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.headerID) as? HeaderView else{ return nil }
+        header.viewSetup()
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.footerID) as? FooterView else {return nil }
+        footerView.viewSetup()
+        return footerView
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 50
+    }
+    }
+
+### (C) Search Controller Delegate and Search Bar Delegate :
+
+![simulator screen shot - iphone se - 2017-11-03 at 10 35 12](https://user-images.githubusercontent.com/10649284/32361496-fc4ff83a-c086-11e7-9661-ab575ef28079.png)
+
+    extension BaseViewController : UISearchResultsUpdating , UISearchBarDelegate {
+   
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        if let scopeText = searchBar.scopeButtonTitles?[searchBar.selectedScopeButtonIndex] {
+            filterSearchTextwithinScope(searchText: searchBar.text ?? "", scopeText: scopeText)
+        } else {
+            filterSearchTextwithinScope(searchText: searchBar.text ?? "")
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        filterSearchTextwithinScope(searchText: searchBar.text ?? "", scopeText: searchBar.scopeButtonTitles![selectedScope])
+    }
+    
+    private func filterSearchTextwithinScope(searchText : String, scopeText : String = "all") {
+        filtered = dataSource.filter({ (task) -> Bool in
+            let isTypeMatch = scopeText.lowercased() == "all" || scopeText.lowercased() == task.type.lowercased()
+            
+            if isSearchBarEmpty() {
+                return isTypeMatch
+            } else {
+                return isTypeMatch && task.description.lowercased().contains(searchController.searchBar.text?.lowercased() ?? "")
+            }
+        })
+        
+        if !filtered.isEmpty {
+            tableView.reloadData()
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        tableView.reloadData()
+    }
+    }
 
 
