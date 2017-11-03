@@ -652,7 +652,7 @@ I am trying to create the basic structure of twitter like cell using collection 
 
 
 *******************************************************************************************************
-# PROJECT 7 : Table View With Pan Gesture to delete and Search Controller 
+# PROJECT 7 : Table View With Pan Gesture to delete and Search Controller to search tasks :
 *******************************************************************************************************
 
 ### Added Pan Gesture (right to left) to delete the item from Table View : 
