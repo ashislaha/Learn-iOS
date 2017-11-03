@@ -23,10 +23,19 @@ class DetailsViewController: UIViewController {
     
     var model : [Book] = []
     var filteredModel : [Book] = []
+    let searchController = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationTitle()
+        setupSearch()
+    }
+    
+    private func setupSearch() {
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "search books"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -113,6 +122,18 @@ extension DetailsViewController : UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         tableView.reloadData()
     }
+}
+
+extension DetailsViewController : UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
+    // scope bar
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        
+    }
+
+    
 }
 
 

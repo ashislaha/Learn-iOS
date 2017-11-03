@@ -21,14 +21,15 @@ class HeaderView : UITableViewHeaderFooterView {
         imageView.layer.borderWidth = 3
         imageView.layer.borderColor = UIColor.blue.cgColor
         imageView.clipsToBounds = true
-        imageView.image = #imageLiteral(resourceName: "profile")
+        imageView.backgroundColor = .yellow
+        imageView.image = UIImage()
         return imageView
     }()
     
     private let headerLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Users Profile"
+        label.text = "To Do List"
         label.textColor = .purple
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textAlignment = .center
