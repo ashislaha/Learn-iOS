@@ -34,7 +34,7 @@ class HeaderView : UITableViewHeaderFooterView {
     private let headerLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Header"
+        label.text = "Users"
         label.textColor = .purple
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textAlignment = .center

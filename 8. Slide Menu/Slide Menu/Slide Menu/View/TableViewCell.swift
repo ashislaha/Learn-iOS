@@ -12,9 +12,9 @@ class TableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+       
     }
-    @IBOutlet weak var name: UILabel! {
+    @IBOutlet private weak var name: UILabel! {
         didSet {
             name.numberOfLines = 0
             // this is important for auto resizing
@@ -31,5 +31,4 @@ class TableViewCell: UITableViewCell {
             name.text = model?.name ?? ""
         }
     }
-    
 }

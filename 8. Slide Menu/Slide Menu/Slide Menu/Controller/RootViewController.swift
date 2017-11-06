@@ -10,7 +10,7 @@ import UIKit
 
 class RootViewController: UIViewController {
 
-    @IBOutlet weak var slideView: UIView!
+    @IBOutlet weak var slideView: UIView! // container view
     @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
     
     private var isMenuOpen = false
