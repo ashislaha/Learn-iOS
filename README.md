@@ -901,4 +901,173 @@ Controller is listening which cell is to be deleted :
     }
     }
 
+*******************************************************************************************************
+# PROJECT 8 : Slide Hamburger Menu Animation
+*******************************************************************************************************
+### Beginning : 
+![simulator screen shot - iphone se - 2017-11-06 at 11 37 25](https://user-images.githubusercontent.com/10649284/32427629-65e49dac-c2e7-11e7-9e0e-8ca2ab639e1c.png)
+
+### After tapping hamburger Menu : 
+![simulator screen shot - iphone se - 2017-11-06 at 11 37 49](https://user-images.githubusercontent.com/10649284/32427630-675be08c-c2e7-11e7-9e81-6828ae5e279d.png)
+
+### Coding : 
+
+## Step 1 : Define RootView Controller :
+
+    class RootViewController: UIViewController {
+
+    @IBOutlet weak var slideView: UIView! // container view
+    @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
+    
+    private var isMenuOpen = false
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .green
+        leadingConstraint.constant = -slideView.bounds.width
+        menuSetup()
+    }
+    
+    private let menu : UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "hamburger"), for: .normal)
+        button.addTarget(self, action: #selector(menuTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc private func menuTapped() {
+        print("menu tapped")
+        isMenuOpen = !isMenuOpen
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.leadingConstraint.constant = self.isMenuOpen ? 0 : -self.slideView.bounds.width
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    private func menuSetup() {
+        view.addSubview(menu)
+        
+        NSLayoutConstraint.activate([
+            menu.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            menu.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            menu.heightAnchor.constraint(equalToConstant: 44),
+            menu.widthAnchor.constraint(equalToConstant: 44)
+         ])
+    }
+    }
+
+## step 2 : Define table view inside Container View :
+
+    class SlideMenuViewController: UIViewController {
+    
+    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableViewSetup()
+        registers()
+    }
+
+    // model data
+    var dataSource : [User] = [
+        User(name: "Ashis"),
+        User(name: "Deepanshu"),
+        User(name: "Pushpak"),
+        User(name: "Nihar"),
+        User(name: "Arko"),
+        User(name: "Prosen"),
+        User(name: "Nitai"),
+        User(name: "Chottu")
+    ]
+    
+    private func tableViewSetup() {
+        // resize based on content
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 100
+        
+        tableView.reloadData()
+        tableView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+    }
+    
+    private func registers() {
+        tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: Constants.headerID)
+        tableView.register(FooterView.self, forHeaderFooterViewReuseIdentifier: Constants.footerID)
+    }
+    }
+
+### Data Source
+
+    extension SlideMenuViewController : UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellID, for: indexPath) as? TableViewCell else { return UITableViewCell() }
+        cell.model = dataSource[indexPath.row]
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.headerID) as? HeaderView else{ return nil }
+        header.viewSetup()
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let footerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Constants.footerID) as? FooterView else {return nil }
+        footerView.viewSetup()
+        return footerView
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 50
+    }
+    }
+
+### Delegate :
+
+    extension SlideMenuViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("cell tapped : \(indexPath)")
+    }
+    }
+
+## Step 3 : Define User Cell :
+
+    class TableViewCell: UITableViewCell {
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+    }
+    
+    @IBOutlet private weak var name: UILabel! {
+        didSet {
+            name.numberOfLines = 0
+            // this is important for auto resizing
+            // This will increase the label height based on content.
+            // This is similar to UITextView disabling Scroll enabled feature to increase the text view size.
+            name.textColor = .black
+            name.textAlignment = .left
+            name.font = UIFont.preferredFont(forTextStyle: .body)
+        }
+    }
+    
+    var model : User? {
+        didSet {
+            name.text = model?.name ?? ""
+        }
+    }
+    }
 
