@@ -10,6 +10,9 @@ import UIKit
 
 class DetailCellTableViewCell: UITableViewCell {
     
+    // add a NSCache for caching the images
+    let cacheImages = NSCache<NSString, UIImage>()
+    
     @IBOutlet private weak var imageVW: UIImageView! {
         didSet {
             imageVW.layer.cornerRadius = 5
@@ -38,13 +41,32 @@ class DetailCellTableViewCell: UITableViewCell {
     
     var model : Book? {
         didSet {
-            imageVW.image = UIImage()
+            loaadImage(urlString: model?.image_url ?? "")
             title.text = model?.book_title ?? ""
             authors.text = model?.author_name ?? ""
             genre.text = model?.genre ?? ""
         }
     }
 
+    private func loaadImage(urlString : String) {
+        guard let url = URL(string: urlString), urlString != "" else { return }
+        // check whether the image is present into cache or not
+        if let image = cacheImages.object(forKey: NSString(string: urlString)) {
+            imageVW.image = image
+            
+        } else {
+            let session = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data , error == nil else { return }
+                DispatchQueue.main.async {
+                    guard let image = UIImage(data: data) else { return }
+                    self.cacheImages.setObject(image, forKey: NSString(string: urlString)) // setting into cache
+                    self.imageVW.image = image
+                }
+            }
+            session.resume()
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }

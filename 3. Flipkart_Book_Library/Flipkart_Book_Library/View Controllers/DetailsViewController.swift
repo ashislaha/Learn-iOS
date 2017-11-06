@@ -21,6 +21,9 @@ class DetailsViewController: UIViewController {
     var filtered : [Book] = []
     let searchController = UISearchController(searchResultsController: nil)
     
+    // another option except NSCache
+    //let urlCache = URLCache(memoryCapacity: Constants.capacity, diskCapacity: Constants.capacity, diskPath: "ImageCachePath")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationTitle()
@@ -80,8 +83,6 @@ extension DetailsViewController : UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCellTableViewCell else { return UITableViewCell() }
-        
-        //guard let url = URL(string: filteredModel[indexPath.row].image_url), indexPath.row < filteredModel.count else { return UITableViewCell() }
         cell.model = isFilteringActive() ?  filtered[indexPath.row] : model[indexPath.row]
         return cell
     }

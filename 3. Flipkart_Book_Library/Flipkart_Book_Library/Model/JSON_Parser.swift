@@ -25,6 +25,7 @@ struct Constants {
     static let author = "author"
     static let genre = "genre"
     static let country = "country"
+    static let capacity : Int = 100*1024*1024 // bytes (i.e. 100 MB)
 }
 
 class Parser {
