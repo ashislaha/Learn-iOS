@@ -94,7 +94,7 @@ extension HomeViewController : UITableViewDelegate {
         
         // model
         dataSource[indexPath.row].isExpand = !dataSource[indexPath.row].isExpand
-        dataSource[indexPath.row].more =  dataSource[indexPath.row].isExpand ? Constants.desc3 : "More to tapped"
+        dataSource[indexPath.row].more =  dataSource[indexPath.row].isExpand ? Constants.desc3 : "More to tapped" //update model
         cell.model = dataSource[indexPath.row] // update the view
         
         tableView.beginUpdates()

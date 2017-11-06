@@ -81,10 +81,10 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="bio" destination="eC3-Ql-2pu" id="f90-fq-6ub"/>
-                                            <outlet property="more" destination="E4W-Rr-4Hz" id="Tkc-Lr-92g"/>
-                                            <outlet property="name" destination="7Ry-eN-dOg" id="UKO-Lf-pcA"/>
-                                            <outlet property="profilePic" destination="y8b-D4-XvW" id="bLn-eP-UiG"/>
-                                            <outlet property="username" destination="CON-h3-M0F" id="LyK-Do-fv6"/>
+                                            <outlet property="more" destination="E4W-Rr-4Hz" id="hcA-7k-hsm"/>
+                                            <outlet property="name" destination="7Ry-eN-dOg" id="GNe-rf-x7t"/>
+                                            <outlet property="profileImage" destination="y8b-D4-XvW" id="TbE-W0-qJs"/>
+                                            <outlet property="username" destination="CON-h3-M0F" id="Gwy-uU-W5t"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

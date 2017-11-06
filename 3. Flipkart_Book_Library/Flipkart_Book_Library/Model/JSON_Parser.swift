@@ -43,7 +43,7 @@ class Parser {
         session.resume()
     }
     
-    static func createModifiedModel(books : [Book] , completionBlock : ([(String,String)])->() ) {
+    static func createModifiedModel(books : [Book] , completionBlock : ([(name : String, tag : String)])->() ) {
         
         // map all
         let authors = books.map { $0.author_name }
@@ -65,17 +65,12 @@ class Parser {
     }
     
     // searchTag may be "author_name"/"author_country"/"genre"
-    static func getModelForName(books : [Book], author : String) -> [Book] {
-        return books.filter{ $0.author_name == author }
-    }
-    
-    //"author_country"
-    static func getModelForName(books : [Book], author_country : String) -> [Book] {
-        return books.filter { $0.author_country == author_country }
-    }
-    
-    //"genre"
-    static func getModelForName(books : [Book], genre : String) -> [Book] {
-        return books.filter{ $0.genre == genre }
+    static func getModel(books : [Book], tagName : String, searchName : String ) -> [Book] {
+        switch tagName {
+        case Constants.author:   return books.filter{ $0.author_name == searchName }
+        case Constants.country : return books.filter { $0.author_country == searchName }
+        case Constants.genre :   return books.filter{ $0.genre == searchName }
+        default: return []
+        }
     }
 }

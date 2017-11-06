@@ -17,34 +17,48 @@ class DetailsViewController: UIViewController {
         }
     }
     
-    @IBOutlet weak var search: UISearchBar! {
-        didSet { search.delegate = self }
-    }
-    
     var model : [Book] = []
-    var filteredModel : [Book] = []
+    var filtered : [Book] = []
     let searchController = UISearchController(searchResultsController: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationTitle()
+        tableViewSetup()
         setupSearch()
+    }
+    
+    private func setNavigationTitle() {
+        self.navigationItem.titleView = UILabel.getTitle()
+    }
+    
+    private func tableViewSetup() {
+        // resize based on content
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 140
+        tableView.isUserInteractionEnabled = true
+        
+        tableView.reloadData()
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
     
     private func setupSearch() {
         searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "search books"
         navigationItem.searchController = searchController
         definesPresentationContext = true
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    private func isSearchBarEmpty() -> Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
     }
-
-    //MARK:- Set title
-    private func setNavigationTitle() {
-        self.navigationItem.titleView = UILabel.getTitle()
+    
+    private func isFilteringActive() -> Bool {
+        let isSearchTextEmpty = isSearchBarEmpty()
+        let isSearchBarScopeEmpty = searchController.searchBar.selectedScopeButtonIndex == 0
+        return searchController.isActive && (!isSearchTextEmpty || !isSearchBarScopeEmpty)
     }
     
     @IBAction func backAction(_ sender: UIBarButtonItem) {
@@ -52,90 +66,71 @@ class DetailsViewController: UIViewController {
     }
 }
 
-extension DetailsViewController : UITableViewDelegate, UITableViewDataSource {
+// Data Source
+extension DetailsViewController : UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let isEmptyStr = search.text?.isEmpty, isEmptyStr {
-            return  model.count
-        }
-        return filteredModel.count
+        let countVal = isFilteringActive() ? filtered.count : model.count
+        return countVal
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as? DetailCellTableViewCell else { return UITableViewCell() }
         
-        if let isEmptyStr = search.text?.isEmpty, isEmptyStr {
-            // cell setup While Seach is empty
-            
-            guard let url = URL(string: model[indexPath.row].image_url) else { return UITableViewCell() }
-            DispatchQueue.global().async {
-                guard let data = try? Data(contentsOf: url) else { return }
-                DispatchQueue.main.async { [weak self] in
-                    cell.imageVW = UIImageView(image: UIImage(data : data))
-                    cell.title.text = self?.model[indexPath.row].book_title
-                    cell.authors.text = self?.model[indexPath.row].author_name
-                    cell.genre.text = self?.model[indexPath.row].genre
-                }
-            }
-        } else {
-            // cell setup While Seach is going on
-            
-            guard let url = URL(string: filteredModel[indexPath.row].image_url) else { return UITableViewCell() }
-            DispatchQueue.global().async {
-                guard let data = try? Data(contentsOf: url) else { return }
-                DispatchQueue.main.async { [weak self] in
-                    cell.imageVW = UIImageView(image: UIImage(data : data))
-                    cell.title.text = self?.filteredModel[indexPath.row].book_title
-                    cell.authors.text = self?.filteredModel[indexPath.row].author_name
-                    cell.genre.text = self?.filteredModel[indexPath.row].genre
-                }
-            }
-        }
+        //guard let url = URL(string: filteredModel[indexPath.row].image_url), indexPath.row < filteredModel.count else { return UITableViewCell() }
+        cell.model = isFilteringActive() ?  filtered[indexPath.row] : model[indexPath.row]
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("\(model[model.index(model.startIndex, offsetBy: indexPath.row)]) is tapped ")
     }
 }
 
-extension DetailsViewController : UISearchBarDelegate {
+// Delegate
+extension DetailsViewController : UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("\(model[indexPath.row])")
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
+}
+
+// Search
+extension DetailsViewController : UISearchResultsUpdating , UISearchBarDelegate {
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // use filter of model to get the results
-        // reload the table view with filtered results
-        // We can optimize here using some throttle / threshold, instead of seaching everytime searchText changes
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        if let scopeText = searchBar.scopeButtonTitles?[searchBar.selectedScopeButtonIndex] {
+            filterSearchTextwithinScope(searchText: searchBar.text ?? "", scopeText: scopeText)
+        } else {
+            filterSearchTextwithinScope(searchText: searchBar.text ?? "")
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        filterSearchTextwithinScope(searchText: searchBar.text ?? "", scopeText: searchBar.scopeButtonTitles![selectedScope])
+    }
+    
+    private func filterSearchTextwithinScope(searchText : String, scopeText : String = "all") {
+        filtered = model.filter({ (book) -> Bool in
+            let isTypeMatch = scopeText.lowercased() == "all" //|| scopeText.lowercased() == task.type.lowercased()
+            
+            if isSearchBarEmpty() {
+                return isTypeMatch
+            } else {
+                return isTypeMatch && book.book_title.lowercased().contains(searchController.searchBar.text?.lowercased() ?? "")
+            }
+        })
         
-        print("Search text : \(searchText)")
-        let filtered = model.filter{
-            $0.book_title.contains(searchText)
-        }
         if !filtered.isEmpty {
-            filteredModel = filtered
+            tableView.reloadData()
         }
-        tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         tableView.reloadData()
     }
 }
-
-extension DetailsViewController : UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        
-    }
-    // scope bar
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        
-    }
-
-    
-}
-
-
-
 

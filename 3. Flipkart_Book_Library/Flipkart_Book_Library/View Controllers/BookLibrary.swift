@@ -43,8 +43,7 @@ class BookLibrary: UIViewController {
             })
         }
     }
-
-    //MARK:- Set title
+    
     private func setNavigationTitle() {
         self.navigationItem.titleView = UILabel.getTitle()
     }
@@ -74,20 +73,13 @@ extension BookLibrary : UITableViewDataSource, UITableViewDelegate {
 
 extension BookLibrary {
     
-    // Prepare Seque here
+    // Prepare Segue here
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let identifier = segue.identifier , identifier == "detail" {
             if let destination = segue.destination as? UINavigationController {
                 if let detailVC = destination.visibleViewController as? DetailsViewController {
                     
-                    var details : [Book] = []
-                    switch selectedData.tag {
-                    case Constants.author :  details = Parser.getModelForName(books: dataSet, author: selectedData.name)
-                    case Constants.genre:    details = Parser.getModelForName(books: dataSet, genre: selectedData.name)
-                    case Constants.country:  details = Parser.getModelForName(books: dataSet, author_country: selectedData.name)
-                    default:
-                        break
-                    }
+                    let details : [Book] = Parser.getModel(books: dataSet, tagName: selectedData.tag, searchName: selectedData.name)
                     detailVC.model = details
                 }
             }
