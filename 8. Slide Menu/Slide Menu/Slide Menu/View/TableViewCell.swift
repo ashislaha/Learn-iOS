@@ -12,8 +12,9 @@ class TableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-       
+        selectionStyle = .gray
     }
+    
     @IBOutlet private weak var name: UILabel! {
         didSet {
             name.numberOfLines = 0

@@ -17,7 +17,10 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         backgroundColor = .purple
+        addSubview(imageView)
+        layoutSetup()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -29,9 +32,7 @@ class CustomCollectionViewCell: UICollectionViewCell {
     var model : CellModel? {
         didSet {
             //imageVw.image = UIImage(named : model?.imageName ?? "car_1")
-            self.addSubview(imageView)
             imageView.image = UIImage(named : model?.imageName ?? "car_1")
-            layoutSetup()
         }
     }
     

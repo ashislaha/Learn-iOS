@@ -1,0 +1,6 @@
+framework module Pods_Explore_Direction {
+  umbrella header "Pods-Explore Direction-umbrella.h"
+
+  export *
+  module * { export * }
+}

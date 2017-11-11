@@ -56,11 +56,23 @@ class UserCell : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func viewSetup() {
+        addSubview(userProfilePic)
+        addSubview(name)
+        addSubview(username)
+        addSubview(bio)
+        addSubview(followBtn)
+        addSubview(seperatorView)
+        layoutSetup()
+    }
+    
     // user profile picture
     private let userProfilePic  : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.layer.cornerRadius = 5
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.black.cgColor
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -108,17 +120,6 @@ class UserCell : UICollectionViewCell {
         view.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
         return view
     }()
-    
-    
-    private func viewSetup() {
-        addSubview(userProfilePic)
-        addSubview(name)
-        addSubview(username)
-        addSubview(bio)
-        addSubview(followBtn)
-        addSubview(seperatorView)
-        layoutSetup()
-    }
     
     private func layoutSetup() {
         // adding constraints

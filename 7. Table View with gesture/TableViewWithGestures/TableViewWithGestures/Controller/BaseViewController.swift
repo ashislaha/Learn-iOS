@@ -61,12 +61,12 @@ class BaseViewController: UIViewController {
     
     private func searchSetup() {
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "search"
-        navigationItem.searchController = searchController
+        navigationItem.searchController = searchController // new in iOS 11
         definesPresentationContext = true
         // setup scope bar
         searchController.searchBar.scopeButtonTitles = ["All","p1","p2","p3"]
+        searchController.searchBar.delegate = self
     }
     
     private func isSearchBarEmpty() -> Bool {
