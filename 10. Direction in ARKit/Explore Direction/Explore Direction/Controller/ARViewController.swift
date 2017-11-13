@@ -59,12 +59,103 @@ class ARViewController: UIViewController {
         return sceneLocationView
     }()
     
+    // black shadow view
     private let blackShadowView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black.withAlphaComponent(0.75)
         return view
     }()
+    
+    // surrounding view
+    private let surroundingView : UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.surroundingViewBackgroundColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let innerSurroundingStackView : UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
+    private let topInnerSurroundingView : UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.surroundingViewBackgroundColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let bottomInnerSurroundingView : UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.surroundingViewBackgroundColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private let detectingTextView : UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.isScrollEnabled = false
+        textView.isUserInteractionEnabled = false
+        textView.textAlignment = .center
+        textView.backgroundColor = .clear
+        
+        var attributedString = NSMutableAttributedString(string: Constants.detectingHeaderText, attributes: [
+            NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 24),
+            NSAttributedStringKey.foregroundColor : UIColor.white
+            ])
+        attributedString.append(NSAttributedString(string: Constants.detectingFooterText, attributes: [
+            NSAttributedStringKey.font : UIFont.systemFont(ofSize: 18),
+            NSAttributedStringKey.foregroundColor : UIColor.white
+            ]))
+        
+        textView.attributedText = attributedString
+        return textView
+    }()
+    
+    private func clearSurroundingView() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            guard let surroundingView = self?.surroundingView else { return }
+            UIView.transition(with: surroundingView, duration: 2.0, options: .transitionCrossDissolve, animations: { [weak self] in
+                self?.surroundingView.backgroundColor = .clear
+            }) { (finish) in
+                self?.surroundingView.removeFromSuperview()
+                self?.locationAdded()
+            }
+        }
+    }
+    
+    private func layoutFoSurroundingView() {
+        surroundingView.addSubview(innerSurroundingStackView)
+        innerSurroundingStackView.addArrangedSubview(topInnerSurroundingView)
+        innerSurroundingStackView.addArrangedSubview(bottomInnerSurroundingView)
+        topInnerSurroundingView.addSubview(detectingTextView)
+        
+        NSLayoutConstraint.activate([
+            // surrounding view
+            surroundingView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            surroundingView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            surroundingView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            surroundingView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.85),
+            
+            // innerSurrounding StackView
+            innerSurroundingStackView.topAnchor.constraint(equalTo: surroundingView.topAnchor),
+            innerSurroundingStackView.trailingAnchor.constraint(equalTo: surroundingView.trailingAnchor),
+            innerSurroundingStackView.leadingAnchor.constraint(equalTo: surroundingView.leadingAnchor),
+            innerSurroundingStackView.bottomAnchor.constraint(equalTo: surroundingView.bottomAnchor),
+            
+            // detectingTextView
+            detectingTextView.leadingAnchor.constraint(equalTo: topInnerSurroundingView.leadingAnchor, constant: 64),
+            detectingTextView.bottomAnchor.constraint(equalTo: topInnerSurroundingView.bottomAnchor),
+            detectingTextView.trailingAnchor.constraint(equalTo: topInnerSurroundingView.trailingAnchor, constant : -64),
+            detectingTextView.heightAnchor.constraint(equalTo: topInnerSurroundingView.heightAnchor, multiplier: 0.6)
+        ])
+    }
     
     private func layoutSetup() {
         NSLayoutConstraint.activate([
@@ -85,8 +176,10 @@ class ARViewController: UIViewController {
     private func sceneViewSetup() {
         view.addSubview(sceneLocationView)
         sceneLocationView.addSubview(blackShadowView)
+        sceneLocationView.addSubview(surroundingView)
         sceneLocationView.addSubview(bottomView)
         
+        layoutFoSurroundingView()
         layoutSetup()
         sceneLocationView.session.delegate = self
         sceneLocationView.locationDelegate = self
@@ -135,11 +228,18 @@ class ARViewController: UIViewController {
         distanceUpdateTimer = nil
     }
     
+    private func markOlaLensIntoShown() {
+        let userDefault = UserDefaults.standard
+        userDefault.set(true, forKey: Constants.showIntro)
+    }
+    
+    // View Controller life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneViewSetup()
-        locationAdded()
         updateModel()
+        clearSurroundingView()
+        // markOlaLensIntoShown()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -183,19 +283,14 @@ class ARViewController: UIViewController {
 extension ARViewController : SceneLocationViewDelegate {
     
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-        
     }
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
-        
     }
     func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-       
     }
     func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
-        
     }
     func sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
-        
     }
 }
 

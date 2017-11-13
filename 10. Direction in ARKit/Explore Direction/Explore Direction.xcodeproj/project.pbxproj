@@ -8,10 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		8029809B1FB5CBA4006D06A4 /* MapContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8029809A1FB5CBA4006D06A4 /* MapContainerViewController.swift */; };
+		8031BB131FB943E80043E440 /* OlaLensIntroPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031BB121FB943E80043E440 /* OlaLensIntroPageViewController.swift */; };
 		80463C8E1FB42FB4005AA933 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463C8D1FB42FB4005AA933 /* AppDelegate.swift */; };
 		80463C901FB42FB4005AA933 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 80463C8F1FB42FB4005AA933 /* art.scnassets */; };
 		80463C921FB42FB4005AA933 /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463C911FB42FB4005AA933 /* ARViewController.swift */; };
-		80463C951FB42FB4005AA933 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80463C931FB42FB4005AA933 /* Main.storyboard */; };
+		80463C951FB42FB4005AA933 /* ARKit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80463C931FB42FB4005AA933 /* ARKit.storyboard */; };
 		80463C971FB42FB4005AA933 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80463C961FB42FB4005AA933 /* Assets.xcassets */; };
 		80463C9A1FB42FB4005AA933 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80463C981FB42FB4005AA933 /* LaunchScreen.storyboard */; };
 		80463CA21FB44B85005AA933 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463CA11FB44B85005AA933 /* MapViewController.swift */; };
@@ -24,11 +25,12 @@
 		33EC26EBDB6C7280B457F458 /* Pods_Explore_Direction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Explore_Direction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58F1D33DF6DCCA2B7BEC2B46 /* Pods-Explore Direction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explore Direction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Explore Direction/Pods-Explore Direction.debug.xcconfig"; sourceTree = "<group>"; };
 		8029809A1FB5CBA4006D06A4 /* MapContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainerViewController.swift; sourceTree = "<group>"; };
+		8031BB121FB943E80043E440 /* OlaLensIntroPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaLensIntroPageViewController.swift; sourceTree = "<group>"; };
 		80463C8A1FB42FB4005AA933 /* Explore Direction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Explore Direction.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		80463C8D1FB42FB4005AA933 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80463C8F1FB42FB4005AA933 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		80463C911FB42FB4005AA933 /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
-		80463C941FB42FB4005AA933 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		80463C941FB42FB4005AA933 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ARKit.storyboard; sourceTree = "<group>"; };
 		80463C961FB42FB4005AA933 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		80463C991FB42FB4005AA933 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		80463C9B1FB42FB4005AA933 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				80463CA11FB44B85005AA933 /* MapViewController.swift */,
+				8031BB121FB943E80043E440 /* OlaLensIntroPageViewController.swift */,
 				80463C911FB42FB4005AA933 /* ARViewController.swift */,
 				8029809A1FB5CBA4006D06A4 /* MapContainerViewController.swift */,
 			);
@@ -94,7 +97,7 @@
 		80463CA61FB45534005AA933 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				80463C931FB42FB4005AA933 /* Main.storyboard */,
+				80463C931FB42FB4005AA933 /* ARKit.storyboard */,
 				80463C8F1FB42FB4005AA933 /* art.scnassets */,
 				80463C961FB42FB4005AA933 /* Assets.xcassets */,
 				80463C981FB42FB4005AA933 /* LaunchScreen.storyboard */,
@@ -192,7 +195,7 @@
 				80463C901FB42FB4005AA933 /* art.scnassets in Resources */,
 				80463C9A1FB42FB4005AA933 /* LaunchScreen.storyboard in Resources */,
 				80463C971FB42FB4005AA933 /* Assets.xcassets in Resources */,
-				80463C951FB42FB4005AA933 /* Main.storyboard in Resources */,
+				80463C951FB42FB4005AA933 /* ARKit.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8029809B1FB5CBA4006D06A4 /* MapContainerViewController.swift in Sources */,
+				8031BB131FB943E80043E440 /* OlaLensIntroPageViewController.swift in Sources */,
 				80463CA41FB44C29005AA933 /* ReachabilityHelper.swift in Sources */,
 				80463C921FB42FB4005AA933 /* ARViewController.swift in Sources */,
 				80463CA21FB44B85005AA933 /* MapViewController.swift in Sources */,
@@ -273,12 +277,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		80463C931FB42FB4005AA933 /* Main.storyboard */ = {
+		80463C931FB42FB4005AA933 /* ARKit.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				80463C941FB42FB4005AA933 /* Base */,
 			);
-			name = Main.storyboard;
+			name = ARKit.storyboard;
 			sourceTree = "<group>";
 		};
 		80463C981FB42FB4005AA933 /* LaunchScreen.storyboard */ = {

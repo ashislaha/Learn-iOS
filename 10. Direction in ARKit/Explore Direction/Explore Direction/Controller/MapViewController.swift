@@ -27,8 +27,10 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
         appDelegate.locationManager.delegate = self
+        appDelegate.locationManager.startUpdatingLocation()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -42,10 +44,7 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         
         registerNotification()
-        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
-        appDelegate.locationManager.startUpdatingLocation()
         reachabilityCheck()
-        handleGoogleMap()
     }
     
     private func reachabilityCheck() {
@@ -66,7 +65,6 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
         }
     }
     
-    
     @IBAction func clear(_ sender: UIBarButtonItem) {
         polyline?.map = nil
         dropLocationMarker?.map = nil
@@ -75,10 +73,27 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     }
     
     @IBAction func viewOpen(_ sender: UIBarButtonItem) {
-        
+        // validation for intro sceen
+        if !isOlaLensIntoShownBefore() {
+            let storyboard = UIStoryboard(name: Constants.storyboardName, bundle: nil)
+            guard let introScreenVC = storyboard.instantiateViewController(withIdentifier: "OlaLensIntroPageViewController") as? OlaLensIntroPageViewController else { return }
+            introScreenVC.delegate = self
+            present(introScreenVC, animated: true, completion: nil)
+            
+        } else {
+            openARView()
+        }
+    }
+    
+    private func isOlaLensIntoShownBefore() -> Bool {
+        let userDefault = UserDefaults.standard
+        return userDefault.value(forKey: Constants.showIntro) as? Bool ?? false
+    }
+    
+    private func openARView() {
         guard !paths.isEmpty else { return }
         
-        if let arVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController {
+        if let arVC = UIStoryboard(name: Constants.storyboardName, bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController {
             let model = OlaLensModel()
             model.carLocation = destination
             model.sectionCoordinates = paths
@@ -139,6 +154,15 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
         polyline.map = map
     }
 }
+
+extension MapViewController : ShowOlaLensIntroDelegate {
+    
+    func allowCameraClicked() {
+        openARView()
+    }
+}
+
+
 extension MapViewController : CLLocationManagerDelegate {
     
     
@@ -150,28 +174,32 @@ extension MapViewController : CLLocationManagerDelegate {
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let location = locations.last else { return }
         
-        if let userLocationMarker = self.userLocationMarker {
-            removeMarker(marker: userLocationMarker)
-        }
-        userLocationMarker = GMSMarker(position: location.coordinate)
-        userLocationMarker.title = "User Location"
-        userLocationMarker.snippet = ""
-        if let image = UIImage(named: "blue-dot") {
-            userLocationMarker.icon = image
-            userLocationMarker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-        }
-        userLocationMarker.map = mapView
-        
-        // one time execution
-        if appDelegate.one_time_execution == false {
-            appDelegate.one_time_execution = true
-            let cameraPosition = GMSCameraPosition(target: location.coordinate, zoom: defaultZoomLabel, bearing: 0, viewingAngle: 0)
-            mapView.animate(to: cameraPosition)
-        }
-        
-        if let carLocation = destination {
-            let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
-            appDelegate.distance = distance
+        if let mapView = mapView {
+            if let userLocationMarker = self.userLocationMarker {
+                removeMarker(marker: userLocationMarker)
+            }
+            userLocationMarker = GMSMarker(position: location.coordinate)
+            userLocationMarker.title = "User Location"
+            userLocationMarker.snippet = ""
+            if let image = UIImage(named: "blue-dot") {
+                userLocationMarker.icon = image
+                userLocationMarker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+            }
+            userLocationMarker.map = mapView
+            
+            // one time execution
+            if appDelegate.one_time_execution == false {
+                appDelegate.one_time_execution = true
+                let cameraPosition = GMSCameraPosition(target: location.coordinate, zoom: defaultZoomLabel, bearing: 0, viewingAngle: 0)
+                mapView.animate(to: cameraPosition)
+            }
+            
+            if let carLocation = destination {
+                let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
+                appDelegate.distance = distance
+            }
+        } else {
+            handleGoogleMap()
         }
     }
     
@@ -220,9 +248,7 @@ extension MapViewController : GMSMapViewDelegate {
                         
                         // Add user location
                         let path = GMSMutablePath()
-                        if let userlocation = self?.userLocationMarker.position {
-                            path.add(userlocation)
-                        }
+                        path.add(userLocation)
                         
                         // add rest of the  co-ordinates
                         if let polyLinePath = polyline.path, polyLinePath.count() > 0 {

@@ -8,6 +8,15 @@
 
 import Foundation
 import CoreLocation
+import UIKit
+
+struct Constants {
+    static let showIntro = "showIntro"
+    static let storyboardName = "ARKit"
+    static let detectingHeaderText = "Detecting your \nSurrounding ..."
+    static let detectingFooterText = "\n\nPlease move around slowly to calibrate your Ola Lens"
+    static let surroundingViewBackgroundColor = UIColor.black.withAlphaComponent(0.55)
+}
 
 class OlaLensModel {
     
