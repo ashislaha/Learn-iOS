@@ -17,6 +17,7 @@ class ARViewController: UIViewController {
     public var model : OlaLensModel?
     private var distanceUpdateTimer : Timer?
     
+    // outlets
     @IBOutlet private weak var bottomView: UIStackView!
     @IBOutlet private weak var carRegNumberLabel: UILabel! {
         didSet {
@@ -51,12 +52,19 @@ class ARViewController: UIViewController {
         }
     }
     
-    // Scene Location View
-    private var sceneLocationView : SceneLocationView = {
-        let sceneLocationView = SceneLocationView()
-        sceneLocationView.translatesAutoresizingMaskIntoConstraints = false
-        sceneLocationView.orientToTrueNorth = true
-        return sceneLocationView
+    // scene view
+//    private var sceneView : OlaSceneView = {
+//        let sceneView = OlaSceneView()
+//        sceneView.translatesAutoresizingMaskIntoConstraints = false
+//        return sceneView
+//    }()
+    
+    // scene view
+    private var sceneView : SceneLocationView = {
+        let sceneView = SceneLocationView()
+        sceneView.orientToTrueNorth = true
+        sceneView.translatesAutoresizingMaskIntoConstraints = false
+        return sceneView
     }()
     
     // black shadow view
@@ -67,104 +75,13 @@ class ARViewController: UIViewController {
         return view
     }()
     
-    // surrounding view
-    private let surroundingView : UIView = {
-        let view = UIView()
-        view.backgroundColor = Constants.surroundingViewBackgroundColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let innerSurroundingStackView : UIStackView = {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        return stackView
-    }()
-    
-    private let topInnerSurroundingView : UIView = {
-        let view = UIView()
-        view.backgroundColor = Constants.surroundingViewBackgroundColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let bottomInnerSurroundingView : UIView = {
-        let view = UIView()
-        view.backgroundColor = Constants.surroundingViewBackgroundColor
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private let detectingTextView : UITextView = {
-        let textView = UITextView()
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.isScrollEnabled = false
-        textView.isUserInteractionEnabled = false
-        textView.textAlignment = .center
-        textView.backgroundColor = .clear
-        
-        var attributedString = NSMutableAttributedString(string: Constants.detectingHeaderText, attributes: [
-            NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 24),
-            NSAttributedStringKey.foregroundColor : UIColor.white
-            ])
-        attributedString.append(NSAttributedString(string: Constants.detectingFooterText, attributes: [
-            NSAttributedStringKey.font : UIFont.systemFont(ofSize: 18),
-            NSAttributedStringKey.foregroundColor : UIColor.white
-            ]))
-        
-        textView.attributedText = attributedString
-        return textView
-    }()
-    
-    private func clearSurroundingView() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            guard let surroundingView = self?.surroundingView else { return }
-            UIView.transition(with: surroundingView, duration: 2.0, options: .transitionCrossDissolve, animations: { [weak self] in
-                self?.surroundingView.backgroundColor = .clear
-            }) { (finish) in
-                self?.surroundingView.removeFromSuperview()
-                self?.locationAdded()
-            }
-        }
-    }
-    
-    private func layoutFoSurroundingView() {
-        surroundingView.addSubview(innerSurroundingStackView)
-        innerSurroundingStackView.addArrangedSubview(topInnerSurroundingView)
-        innerSurroundingStackView.addArrangedSubview(bottomInnerSurroundingView)
-        topInnerSurroundingView.addSubview(detectingTextView)
-        
-        NSLayoutConstraint.activate([
-            // surrounding view
-            surroundingView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            surroundingView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            surroundingView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            surroundingView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.85),
-            
-            // innerSurrounding StackView
-            innerSurroundingStackView.topAnchor.constraint(equalTo: surroundingView.topAnchor),
-            innerSurroundingStackView.trailingAnchor.constraint(equalTo: surroundingView.trailingAnchor),
-            innerSurroundingStackView.leadingAnchor.constraint(equalTo: surroundingView.leadingAnchor),
-            innerSurroundingStackView.bottomAnchor.constraint(equalTo: surroundingView.bottomAnchor),
-            
-            // detectingTextView
-            detectingTextView.leadingAnchor.constraint(equalTo: topInnerSurroundingView.leadingAnchor, constant: 64),
-            detectingTextView.bottomAnchor.constraint(equalTo: topInnerSurroundingView.bottomAnchor),
-            detectingTextView.trailingAnchor.constraint(equalTo: topInnerSurroundingView.trailingAnchor, constant : -64),
-            detectingTextView.heightAnchor.constraint(equalTo: topInnerSurroundingView.heightAnchor, multiplier: 0.6)
-        ])
-    }
-    
     private func layoutSetup() {
         NSLayoutConstraint.activate([
-            // sceneLocationView
-            sceneLocationView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            sceneLocationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            sceneLocationView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            sceneLocationView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
+            // scene view
+            sceneView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            sceneView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            sceneView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            sceneView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             // blackShadowView
             blackShadowView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             blackShadowView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
@@ -174,15 +91,12 @@ class ARViewController: UIViewController {
     }
     
     private func sceneViewSetup() {
-        view.addSubview(sceneLocationView)
-        sceneLocationView.addSubview(blackShadowView)
-        sceneLocationView.addSubview(surroundingView)
-        sceneLocationView.addSubview(bottomView)
+        view.addSubview(sceneView)
+        sceneView.addSubview(blackShadowView)
+        sceneView.addSubview(bottomView)
         
-        layoutFoSurroundingView()
         layoutSetup()
-        sceneLocationView.session.delegate = self
-        sceneLocationView.locationDelegate = self
+        sceneView.session.delegate = self
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tappedOnSceneView))
         view.addGestureRecognizer(tapGesture)
     }
@@ -192,13 +106,12 @@ class ARViewController: UIViewController {
     }
     
     @objc private func tappedOnSceneView() {
-        
         UIView.animate(withDuration: 1.0) {
             self.mapContainer.alpha = 0.0
             self.mapContainer.alpha = 1.0
         }
         // find out node and do animation
-        sceneLocationView.sceneNode?.childNodes.forEach({ (node) in
+        sceneView.scene.rootNode.childNodes.forEach({ (node) in
             let basicAnimation = CABasicAnimation(keyPath: "opacity")
             basicAnimation.fromValue = 0.0
             basicAnimation.toValue = 1.0
@@ -238,29 +151,82 @@ class ARViewController: UIViewController {
         super.viewDidLoad()
         sceneViewSetup()
         updateModel()
-        clearSurroundingView()
-        // markOlaLensIntoShown()
+        //markOlaLensIntoShown()
+        addNodesToScene()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        sceneLocationView.run()
+        sceneView.run()
         registerTimer()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        sceneLocationView.pause()
+        sceneView.pause()
         invalidateTimer()
     }
-    
-    // Locations Added
-    private func locationAdded() {
-        guard let sectionCoordinates = model?.sectionCoordinates, let endPosition = model?.carLocation else { return }
-        for location in sectionCoordinates {
-            addNode(location: location,imageName: "pin")
+   
+    // adding a node
+    private func addNodesToScene() {
+        
+        guard let sectionCoordinates = model?.sectionCoordinates, let endPosition = model?.carLocation , let appDelegate = UIApplication.shared.delegate as? AppDelegate, let userLocation = appDelegate.locationManager.location?.coordinate , !sectionCoordinates.isEmpty else { return }
+        
+        var prevLocation : CLLocationCoordinate2D = userLocation
+        
+        addOlaLensNode(location: prevLocation,previousLocation: sectionCoordinates.first!) // at user location
+        
+        for location in sectionCoordinates where !sameLocation(location1: prevLocation, location2: location) {
+            addOlaLensNode(location: location,previousLocation: prevLocation)
+            prevLocation = location
         }
-        addNode(location: endPosition, imageName: "carPosition")
+        addOlaLensNode(location: endPosition, previousLocation: prevLocation,imageName: "carPosition") // at car position
+    }
+    
+/*
+    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "" ) {
+        guard let altitude = getLocationAltitude() else { return }
+        
+        let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
+        if let image = UIImage(named: imageName) {
+            let node = OlaLensNode(location: nodeLocation, image: image)
+            sceneView.scene.rootNode.addChildNode(node)
+            print("\n\n\(node.estimate.position)")
+        } else {
+            let node = OlaLensNode(location:  nodeLocation, image: nil)
+            let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
+            ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+            sceneView.scene.rootNode.addChildNode(node)
+            print("\n\n\(node.estimate.position)")
+        }
+    }
+
+ */
+
+    // While using SceneLocationView
+    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "" ) {
+        guard let altitude = getLocationAltitude() else { return }
+        
+        let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
+        if let image = UIImage(named: imageName) {
+            let node =  LocationAnnotationNode(location: nodeLocation, image: image)
+            node.scaleRelativeToDistance = true
+            sceneView.addLocationNodeWithConfirmedLocation(locationNode: node)
+           
+        } else {
+            let node = OlaSceneNode(location: nodeLocation)
+            node.scaleRelativeToDistance = true
+            let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
+            ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+            sceneView.addLocationNodeWithConfirmedLocation(locationNode: node)
+        }
+    }
+    
+    private func setLookAtConstraint(previousNode : SCNNode, nextNode : SCNNode) {
+        // previous node will follow next node, use SCNLookAtConstraint
+        let constraint = SCNLookAtConstraint(target: nextNode)
+        constraint.isGimbalLockEnabled = false
+        previousNode.constraints = [constraint]
     }
     
     private func getLocationAltitude() -> CLLocationDistance? {
@@ -268,29 +234,8 @@ class ARViewController: UIViewController {
         return appDelegate.locationManager.location?.altitude
     }
     
-    private func addNode(location : CLLocationCoordinate2D, imageName : String) {
-        guard let altitude = getLocationAltitude() , let image = UIImage(named: imageName) else { return }
-        print("altitude : \(altitude)")
-        let coordinate = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-        let location = CLLocation(coordinate: coordinate, altitude: altitude)
-        let annotationNode = LocationAnnotationNode(location: location, image: image)
-        annotationNode.scaleRelativeToDistance = true
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: annotationNode)
-    }
-}
-
-// Scene Location View Delegate
-extension ARViewController : SceneLocationViewDelegate {
-    
-    func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
-    }
-    func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
-    }
-    func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: SceneLocationView, locationNode: LocationNode) {
-    }
-    func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
-    }
-    func sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: SceneLocationView, position: SCNVector3, location: CLLocation) {
+    private func sameLocation(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Bool {
+        return location1.latitude == location2.latitude && location1.longitude == location2.longitude
     }
 }
 

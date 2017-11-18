@@ -56,7 +56,6 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
             alert.addAction(okButton)
             self.present(alert, animated: true, completion: nil)
         }
-        
     }
     
     private func registerNotification() {
@@ -73,13 +72,13 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     }
     
     @IBAction func viewOpen(_ sender: UIBarButtonItem) {
-        // validation for intro sceen
+        guard !paths.isEmpty else { return }
+        
         if !isOlaLensIntoShownBefore() {
             let storyboard = UIStoryboard(name: Constants.storyboardName, bundle: nil)
             guard let introScreenVC = storyboard.instantiateViewController(withIdentifier: "OlaLensIntroPageViewController") as? OlaLensIntroPageViewController else { return }
             introScreenVC.delegate = self
             present(introScreenVC, animated: true, completion: nil)
-            
         } else {
             openARView()
         }
@@ -309,6 +308,8 @@ extension MapViewController : GMSMapViewDelegate {
                         }
                         
                         if let polyline = polyline { completionHandler?(polyline) }
+                    } else {
+                        print("Error : \(error?.localizedDescription ?? "" )")
                     }
                 }
             })

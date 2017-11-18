@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8010486F1FC0154600EE6CBC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8010486E1FC0154600EE6CBC /* Utils.swift */; };
+		801048721FC04B7E00EE6CBC /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801048711FC04B7E00EE6CBC /* extensions.swift */; };
 		8029809B1FB5CBA4006D06A4 /* MapContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8029809A1FB5CBA4006D06A4 /* MapContainerViewController.swift */; };
 		8031BB131FB943E80043E440 /* OlaLensIntroPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8031BB121FB943E80043E440 /* OlaLensIntroPageViewController.swift */; };
 		80463C8E1FB42FB4005AA933 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463C8D1FB42FB4005AA933 /* AppDelegate.swift */; };
@@ -18,12 +20,17 @@
 		80463CA21FB44B85005AA933 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463CA11FB44B85005AA933 /* MapViewController.swift */; };
 		80463CA41FB44C29005AA933 /* ReachabilityHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80463CA31FB44C29005AA933 /* ReachabilityHelper.swift */; };
 		806D52CC1FB6ACF6001086C2 /* OlaLensModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806D52CB1FB6ACF6001086C2 /* OlaLensModel.swift */; };
+		8089E8771FBACE2100C292F6 /* OlaSceneNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8089E8761FBACE2100C292F6 /* OlaSceneNode.swift */; };
+		8089E8791FBAE73B00C292F6 /* ARSetupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8089E8781FBAE73B00C292F6 /* ARSetupUtility.swift */; };
+		80DFDCD61FBF2E0F0057688C /* OlaLensNode+OlaSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80DFDCD51FBF2E0F0057688C /* OlaLensNode+OlaSceneView.swift */; };
 		ACB76F4FB70884BC96259D75 /* Pods_Explore_Direction.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EC26EBDB6C7280B457F458 /* Pods_Explore_Direction.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		33EC26EBDB6C7280B457F458 /* Pods_Explore_Direction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Explore_Direction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58F1D33DF6DCCA2B7BEC2B46 /* Pods-Explore Direction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explore Direction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Explore Direction/Pods-Explore Direction.debug.xcconfig"; sourceTree = "<group>"; };
+		8010486E1FC0154600EE6CBC /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		801048711FC04B7E00EE6CBC /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		8029809A1FB5CBA4006D06A4 /* MapContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainerViewController.swift; sourceTree = "<group>"; };
 		8031BB121FB943E80043E440 /* OlaLensIntroPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaLensIntroPageViewController.swift; sourceTree = "<group>"; };
 		80463C8A1FB42FB4005AA933 /* Explore Direction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Explore Direction.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,6 +44,9 @@
 		80463CA11FB44B85005AA933 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		80463CA31FB44C29005AA933 /* ReachabilityHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityHelper.swift; sourceTree = "<group>"; };
 		806D52CB1FB6ACF6001086C2 /* OlaLensModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaLensModel.swift; sourceTree = "<group>"; };
+		8089E8761FBACE2100C292F6 /* OlaSceneNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OlaSceneNode.swift; sourceTree = "<group>"; };
+		8089E8781FBAE73B00C292F6 /* ARSetupUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSetupUtility.swift; sourceTree = "<group>"; };
+		80DFDCD51FBF2E0F0057688C /* OlaLensNode+OlaSceneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OlaLensNode+OlaSceneView.swift"; sourceTree = "<group>"; };
 		A19760DCA6CEFA4E3774894E /* Pods-Explore Direction.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explore Direction.release.xcconfig"; path = "Pods/Target Support Files/Pods-Explore Direction/Pods-Explore Direction.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -52,6 +62,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		801048701FC0182700EE6CBC /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				8089E8761FBACE2100C292F6 /* OlaSceneNode.swift */,
+				8010486E1FC0154600EE6CBC /* Utils.swift */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
 		80463C811FB42FB3005AA933 = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +97,7 @@
 				806D52CD1FB6ACFE001086C2 /* Model */,
 				80463CA51FB454EB005AA933 /* Controller */,
 				80463CA61FB45534005AA933 /* View */,
+				801048701FC0182700EE6CBC /* Others */,
 				80463C9B1FB42FB4005AA933 /* Info.plist */,
 			);
 			path = "Explore Direction";
@@ -109,6 +129,9 @@
 			isa = PBXGroup;
 			children = (
 				806D52CB1FB6ACF6001086C2 /* OlaLensModel.swift */,
+				8089E8781FBAE73B00C292F6 /* ARSetupUtility.swift */,
+				80DFDCD51FBF2E0F0057688C /* OlaLensNode+OlaSceneView.swift */,
+				801048711FC04B7E00EE6CBC /* extensions.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -269,8 +292,13 @@
 				80463CA41FB44C29005AA933 /* ReachabilityHelper.swift in Sources */,
 				80463C921FB42FB4005AA933 /* ARViewController.swift in Sources */,
 				80463CA21FB44B85005AA933 /* MapViewController.swift in Sources */,
+				80DFDCD61FBF2E0F0057688C /* OlaLensNode+OlaSceneView.swift in Sources */,
+				8089E8771FBACE2100C292F6 /* OlaSceneNode.swift in Sources */,
+				8010486F1FC0154600EE6CBC /* Utils.swift in Sources */,
 				806D52CC1FB6ACF6001086C2 /* OlaLensModel.swift in Sources */,
+				8089E8791FBAE73B00C292F6 /* ARSetupUtility.swift in Sources */,
 				80463C8E1FB42FB4005AA933 /* AppDelegate.swift in Sources */,
+				801048721FC04B7E00EE6CBC /* extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
