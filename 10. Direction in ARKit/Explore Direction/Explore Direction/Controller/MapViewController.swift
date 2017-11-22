@@ -16,7 +16,6 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     let polylineStokeWidth : CGFloat = 5.0
     
     private var mapView : GMSMapView!
-    private var userLocationMarker : GMSMarker!
     private var polyline : GMSPolyline!
     private var dropLocationMarker : GMSMarker!
     
@@ -118,6 +117,7 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
         let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: defaultZoomLabel)
         mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
         mapView.isUserInteractionEnabled = true
+        mapView.isMyLocationEnabled = true
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(mapView)
     }
@@ -155,7 +155,6 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
 }
 
 extension MapViewController : ShowOlaLensIntroDelegate {
-    
     func allowCameraClicked() {
         openARView()
     }
@@ -164,7 +163,6 @@ extension MapViewController : ShowOlaLensIntroDelegate {
 
 extension MapViewController : CLLocationManagerDelegate {
     
-    
     private func sameLocation(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Bool  {
         return location1.latitude == location2.latitude && location1.longitude == location2.longitude
     }
@@ -172,32 +170,12 @@ extension MapViewController : CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let location = locations.last else { return }
+        if let carLocation = destination {
+            let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
+            appDelegate.distance = distance
+        }
         
-        if let mapView = mapView {
-            if let userLocationMarker = self.userLocationMarker {
-                removeMarker(marker: userLocationMarker)
-            }
-            userLocationMarker = GMSMarker(position: location.coordinate)
-            userLocationMarker.title = "User Location"
-            userLocationMarker.snippet = ""
-            if let image = UIImage(named: "blue-dot") {
-                userLocationMarker.icon = image
-                userLocationMarker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
-            }
-            userLocationMarker.map = mapView
-            
-            // one time execution
-            if appDelegate.one_time_execution == false {
-                appDelegate.one_time_execution = true
-                let cameraPosition = GMSCameraPosition(target: location.coordinate, zoom: defaultZoomLabel, bearing: 0, viewingAngle: 0)
-                mapView.animate(to: cameraPosition)
-            }
-            
-            if let carLocation = destination {
-                let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
-                appDelegate.distance = distance
-            }
-        } else {
+        if mapView == nil {
             handleGoogleMap()
         }
     }

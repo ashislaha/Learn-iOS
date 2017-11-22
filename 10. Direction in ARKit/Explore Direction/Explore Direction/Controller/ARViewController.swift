@@ -55,7 +55,7 @@ class ARViewController: UIViewController {
     // scene view
 //    private var sceneView : OlaSceneView = {
 //        let sceneView = OlaSceneView()
-//        sceneView.translatesAutoresizingMaskIntoConstraints = false
+//        sceneView.translatesAutoresizingMaskIntoConstraints = false // enable auto-layout
 //        return sceneView
 //    }()
     
@@ -173,54 +173,80 @@ class ARViewController: UIViewController {
         guard let sectionCoordinates = model?.sectionCoordinates, let endPosition = model?.carLocation , let appDelegate = UIApplication.shared.delegate as? AppDelegate, let userLocation = appDelegate.locationManager.location?.coordinate , !sectionCoordinates.isEmpty else { return }
         
         var prevLocation : CLLocationCoordinate2D = userLocation
-        
         addOlaLensNode(location: prevLocation,previousLocation: sectionCoordinates.first!) // at user location
         
-        for location in sectionCoordinates where !sameLocation(location1: prevLocation, location2: location) {
+        for location in sectionCoordinates where distanceCheck(location1: prevLocation, location2: location) {
             addOlaLensNode(location: location,previousLocation: prevLocation)
             prevLocation = location
         }
-        addOlaLensNode(location: endPosition, previousLocation: prevLocation,imageName: "carPosition") // at car position
+        // at car position
+        addOlaLensNode(location: endPosition, previousLocation: prevLocation,imageName: "logo")
+        addOlaLensNode(location: endPosition, previousLocation: endPosition,imageName: "", downwards: true)
     }
     
 /*
-    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "" ) {
+    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "", downwards : Bool = false) {
         guard let altitude = getLocationAltitude() else { return }
         
-        let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
         if let image = UIImage(named: imageName) {
+            let altitudeMatric = altitude + 1
+            let nodeLocation = CLLocation(coordinate: location, altitude: altitudeMatric)
             let node = OlaLensNode(location: nodeLocation, image: image)
+            node.scale = SCNVector3Make(3, 3, 3)
             sceneView.scene.rootNode.addChildNode(node)
             print("\n\n\(node.estimate.position)")
+            
         } else {
-            let node = OlaLensNode(location:  nodeLocation, image: nil)
-            let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
-            ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+            let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
+            var node : OlaLensNode!
+            if !downwards {
+                node = OlaLensNode(location: nodeLocation, image: nil)
+                let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
+                ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+                print("\n\n\(node.estimate.position)")
+            } else {
+                node = OlaLensNode(location: nodeLocation, image: nil, downArrow: true)
+                let billboardConstraint = SCNBillboardConstraint()
+                billboardConstraint.freeAxes = .all
+                node.constraints = [billboardConstraint] // make it focus to camera always
+            }
             sceneView.scene.rootNode.addChildNode(node)
-            print("\n\n\(node.estimate.position)")
         }
     }
 
- */
+*/
 
     // While using SceneLocationView
-    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "" ) {
+    private func addOlaLensNode(location : CLLocationCoordinate2D, previousLocation : CLLocationCoordinate2D, imageName : String = "" , downwards : Bool = false) {
         guard let altitude = getLocationAltitude() else { return }
         
-        let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
         if let image = UIImage(named: imageName) {
+            let altitudeMatric = altitude + 1
+            let nodeLocation = CLLocation(coordinate: location, altitude: altitudeMatric)
             let node =  LocationAnnotationNode(location: nodeLocation, image: image)
+            node.scale = SCNVector3Make(3, 3, 3)
             node.scaleRelativeToDistance = true
             sceneView.addLocationNodeWithConfirmedLocation(locationNode: node)
            
         } else {
-            let node = OlaSceneNode(location: nodeLocation)
-            node.scaleRelativeToDistance = true
-            let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
-            ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+            let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
+            var node : OlaSceneNode!
+            if !downwards {
+                node = OlaSceneNode(location: nodeLocation)
+                node.scaleRelativeToDistance = true
+                let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
+                ARSetupUtility.shared.rotateNode(node: node, theta: theta)
+            } else {
+                node = OlaSceneNode(location: nodeLocation, downArrow : true)
+                node.scaleRelativeToDistance = true
+                let billboardConstraint = SCNBillboardConstraint()
+                billboardConstraint.freeAxes = .all
+                node.constraints = [billboardConstraint] // make it focus to camera always
+            }
             sceneView.addLocationNodeWithConfirmedLocation(locationNode: node)
         }
     }
+
     
     private func setLookAtConstraint(previousNode : SCNNode, nextNode : SCNNode) {
         // previous node will follow next node, use SCNLookAtConstraint
@@ -234,8 +260,8 @@ class ARViewController: UIViewController {
         return appDelegate.locationManager.location?.altitude
     }
     
-    private func sameLocation(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Bool {
-        return location1.latitude == location2.latitude && location1.longitude == location2.longitude
+    private func distanceCheck(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Bool { // more than 10 meters
+        return CLLocation(latitude: location1.latitude, longitude: location1.longitude).distance(from: CLLocation(latitude: location2.latitude, longitude: location2.longitude)) > 10
     }
 }
 

@@ -44,7 +44,7 @@ class OlaLensNode : SCNNode {
         super.init()
     }
     
-    init(location : CLLocation, image : UIImage?) {
+    init(location : CLLocation, image : UIImage?, downArrow : Bool = false) {
         super.init()
         
         guard let currentLocation = currentLocation() else { return }
@@ -75,11 +75,11 @@ class OlaLensNode : SCNNode {
             addChildNode(childNode)
         } else {
             
-            let childNode = getArrow3D(sceneName: arrow)
-            //addShimmerAnimationForLifeTime(node: childNode)
+            let childNode = getArrow3D(sceneName: arrow,downArrow: downArrow)
             childNode.position = position
-            childNode.scale = SCNVector3Make(1, 1, 1)
+            childNode.scale = SCNVector3Make(2, 2, 2)
             addChildNode(childNode)
+            addTexture(node: childNode)
         }
     }
     
@@ -94,7 +94,7 @@ class OlaLensNode : SCNNode {
     
     private func getCurrentPosition() -> SCNVector3 { return SCNVector3Make(0, 0, 0) }
     
-    private func getArrow3D(sceneName : String) -> SCNNode {
+    private func getArrow3D(sceneName : String, downArrow : Bool = false) -> SCNNode {
         guard let scene = SCNScene(named:sceneName) else { return SCNNode() }
         if scene.rootNode.childNodes.count == 2 {
             scene.rootNode.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.getFontSideArrowColor()
@@ -104,24 +104,24 @@ class OlaLensNode : SCNNode {
                 each.geometry?.firstMaterial?.diffuse.contents = UIColor.getFontSideArrowColor()
             }
         }
+        if downArrow {
+            scene.rootNode.rotation = SCNVector4Make(0, 0, 1, -Float(Double.pi/2))
+        }
         return scene.rootNode
     }
     
-    private func addShimmerAnimationForLifeTime(node : SCNNode) {
-        // shimmer animation
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = 3.0
-        
-        let easeInEaseOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        SCNTransaction.animationTimingFunction = easeInEaseOut
-        
-        SCNTransaction.completionBlock = {
-            self.addShimmerAnimationForLifeTime(node: node)
+    private func addTexture(node : SCNNode) {
+        let toPow: Double = 5
+        let timeDuration: Double = 15 / pow(2, toPow)
+        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
+            let imgName = "progressbar" + "\(Int(Double(d) * pow(2, toPow)) + 1)"
+            //print(imgName)
+            let image = UIImage(named: imgName)
+            node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
+            node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
         }
-        
-        //node.geometry?.firstMaterial?.diffuse.contents =  UIImage.getRandomImages()
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
-        SCNTransaction.commit()
+        let repeatAction = SCNAction.repeatForever(textureAction)
+        node.runAction(repeatAction)
     }
 }
 
@@ -142,7 +142,7 @@ class OlaSceneView: ARSCNView {
         configuration.worldAlignment = .gravityAndHeading
         session.run(configuration)
         
-        updateEstimatesTimer?.invalidate()
+        //updateEstimatesTimer?.invalidate()
         //updateEstimatesTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(OlaSceneView.updateLocationData), userInfo: nil, repeats: true)
     }
     

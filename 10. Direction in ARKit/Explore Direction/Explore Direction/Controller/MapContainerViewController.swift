@@ -29,7 +29,22 @@ class MapContainerViewController: UIViewController {
         let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: 16.0)
         mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
         mapView.isUserInteractionEnabled = false
+        mapView.isMyLocationEnabled = true
         mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         view.addSubview(mapView)
+    }
+    
+    private func createMarker(location : CLLocationCoordinate2D, mapView : GMSMapView, markerTitle : String = "", snippet : String = "", image : UIImage? = nil, markerName : String? = nil) {
+        let marker = GMSMarker(position: location)
+        marker.title =  markerTitle
+        marker.snippet = snippet
+        if let image = image {
+            marker.icon = image
+            marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+        }
+        if let markerName = markerName {
+            marker.userData = markerName
+        }
+        marker.map = mapView
     }
 }

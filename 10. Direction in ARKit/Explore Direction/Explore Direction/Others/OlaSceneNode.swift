@@ -12,20 +12,23 @@ import CoreLocation
 
 class OlaSceneNode : LocationAnnotationNode  { 
     
-    public init(location: CLLocation?) {
+    let sceneName = "art.scnassets/arrow.scn"
+    
+    public init(location: CLLocation?, downArrow : Bool = false) {
         super.init(location: location, image: UIImage())
         super.constraints = [] // remove the Y-axis billboard constraint from super
         
-        let annotationNode = getArrow3D(sceneName: "art.scnassets/arrow.scn")
+        let annotationNode = getArrow3D(sceneName: sceneName, downArrow : downArrow)
         self.location = location
         addChildNode(annotationNode)
+        addTexture(node: annotationNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func getArrow3D(sceneName : String) -> SCNNode {
+    private func getArrow3D(sceneName : String, downArrow : Bool = false) -> SCNNode {
         guard let scene = SCNScene(named:sceneName) else { return SCNNode() }
         if scene.rootNode.childNodes.count == 2 {
             scene.rootNode.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.getFontSideArrowColor()
@@ -35,24 +38,25 @@ class OlaSceneNode : LocationAnnotationNode  {
                 each.geometry?.firstMaterial?.diffuse.contents = UIColor.getFontSideArrowColor()
             }
         }
-        scene.rootNode.scale = SCNVector3Make(3, 3, 3)
+        scene.rootNode.scale = SCNVector3Make(2, 2, 2)
+        if downArrow {
+            scene.rootNode.rotation = SCNVector4Make(0, 0, 1, -Float(Double.pi/2))
+        }
         return scene.rootNode
     }
-    
-    private func addShimmerAnimationForLifeTime(node : SCNNode) {
-        // shimmer animation
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = 3.0
-        
-        let easeInEaseOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        SCNTransaction.animationTimingFunction = easeInEaseOut
-        
-        SCNTransaction.completionBlock = {
-            self.addShimmerAnimationForLifeTime(node: node)
+   
+    private func addTexture(node : SCNNode) {
+        let toPow: Double = 5
+        let timeDuration: Double = 15 / pow(2, toPow)
+        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
+            let imgName = "progressbar" + "\(Int(Double(d) * pow(2, toPow)) + 1)"
+            //print(imgName)
+            let image = UIImage(named: imgName)
+            node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
+            node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
         }
-        //node.geometry?.firstMaterial?.diffuse.contents =  UIImage.getRandomImages()
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
-        SCNTransaction.commit()
+        let repeatAction = SCNAction.repeatForever(textureAction)
+        node.runAction(repeatAction)
     }
 }
 

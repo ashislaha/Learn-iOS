@@ -25,18 +25,21 @@ final class ARSetupUtility : NSObject {
     public func getAngle(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Double {
         let dx = location2.longitude - location1.longitude
         let dy = location2.latitude - location1.latitude
+        var theta = 0.0
         
-        var theta = 0.0 // intially 90 degree to make the arrow linear // // (3.14159265358979 / 2)
-        theta += atan(Double(dy/dx))
-        
-        if dx < 0 && dy < 0 { // 3rd co-ordinate where tan is +ve
-            theta += Double.pi
-        } else if dx < 0 && dy > 0 { // 2nd coordinate where tan is -ve
-            theta += Double.pi
-        }
-        
-        if theta == .nan {
-            theta = 3.14159265358979 / 2 // 90 Degree
+        if dx == 0 && dy == 0 { // same location then show the arrow down-wards , like car location
+            theta = Double.pi/2
+        } else {
+            
+            theta += atan(Double(dy/dx))
+            if dx < 0 && dy < 0 { // 3rd co-ordinate where tan is +ve
+                theta += Double.pi
+            } else if dx < 0 && dy > 0 { // 2nd coordinate where tan is -ve
+                theta += Double.pi
+            }
+            if theta == .nan {
+                theta = 3.14159265358979 / 2 // 90 Degree
+            }
         }
         
         print("\n\n\nprev : \(location1)")
@@ -55,6 +58,54 @@ final class ARSetupUtility : NSObject {
             node.addAnimation(rotation, forKey: "Rotate it")
         }
         node.rotation = SCNVector4Make(0, 1, 0, Float(theta))
+    }
+    
+    public func rotateDownwardsNode(node : SCNNode, theta : Double, with animation : Bool = false) {
+        if animation {
+            let rotation = CABasicAnimation(keyPath: "rotation")
+            rotation.fromValue = SCNVector4Make(0, 0, 1, 0)
+            rotation.toValue = SCNVector4Make(0, 0, 1, Float(theta))
+            rotation.duration = 2.0
+            node.addAnimation(rotation, forKey: "Rotate it")
+        }
+        node.rotation = SCNVector4Make(0,0,1, Float(theta))
+    }
+    
+    // add gradient effect
+    public func addGradientEffect(node : SCNNode) {
+        
+        let startLocations : [NSNumber] = [0.0, 0.5, 1.0]
+        let endLocations : [NSNumber] =  [0.5, 0.75, 1.0]
+        
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.red.cgColor, UIColor.green.cgColor, UIColor.blue.cgColor]
+        gradient.locations = startLocations
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.7)
+        
+     
+        let animation = CABasicAnimation(keyPath: "locations")
+        animation.fromValue = startLocations
+        animation.toValue = endLocations
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        gradient.add(animation, forKey: "animateGradient")
+        node.addAnimation(animation, forKey: "gradient it")
+    }
+    
+    public func contentAnimationChange(node : SCNNode) {
+        // shimmer animation
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 3.0
+        
+        let easeInEaseOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        SCNTransaction.animationTimingFunction = easeInEaseOut
+        
+        SCNTransaction.completionBlock = {
+            self.contentAnimationChange(node: node)
+        }
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
+        SCNTransaction.commit()
     }
     
     // Get Input

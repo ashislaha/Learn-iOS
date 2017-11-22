@@ -16,6 +16,7 @@ struct Constants {
     static let detectingHeaderText = "Detecting your \nSurrounding ..."
     static let detectingFooterText = "\n\nPlease move around slowly to calibrate your Ola Lens"
     static let surroundingViewBackgroundColor = UIColor.black.withAlphaComponent(0.55)
+    static let polylineColor = UIColor(red: CGFloat(1 / 255.0), green: CGFloat(179 / 255.0), blue: CGFloat(253 / 255.0), alpha: CGFloat(1.0))
 }
 
 class OlaLensModel {
