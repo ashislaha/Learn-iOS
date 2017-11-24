@@ -74,7 +74,7 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
         guard !paths.isEmpty else { return }
         
         if !isOlaLensIntoShownBefore() {
-            let storyboard = UIStoryboard(name: Constants.storyboardName, bundle: nil)
+            let storyboard = UIStoryboard(name: ARConstants.storyboardName, bundle: nil)
             guard let introScreenVC = storyboard.instantiateViewController(withIdentifier: "OlaLensIntroPageViewController") as? OlaLensIntroPageViewController else { return }
             introScreenVC.delegate = self
             present(introScreenVC, animated: true, completion: nil)
@@ -85,13 +85,13 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     
     private func isOlaLensIntoShownBefore() -> Bool {
         let userDefault = UserDefaults.standard
-        return userDefault.value(forKey: Constants.showIntro) as? Bool ?? false
+        return userDefault.value(forKey: ARConstants.showIntro) as? Bool ?? false
     }
     
     private func openARView() {
         guard !paths.isEmpty else { return }
         
-        if let arVC = UIStoryboard(name: Constants.storyboardName, bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController {
+        if let arVC = UIStoryboard(name: ARConstants.storyboardName, bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController {
             let model = OlaLensModel()
             model.carLocation = destination
             model.sectionCoordinates = paths
@@ -216,6 +216,7 @@ extension MapViewController : GMSMapViewDelegate {
         
         reachabilityCheck()
         guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
+        ARSetupUtility.shared.destination = coordinate
         
         if let userLocation = appDelegate.locationManager.location?.coordinate {
             if ReachabilityHelper.isInternetAvailable() {

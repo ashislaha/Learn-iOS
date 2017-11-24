@@ -7,9 +7,9 @@
 //
 
 import ARKit
-import ARCL
 import CoreLocation
 
+@available(iOS 11.0, *)
 class OlaSceneNode : LocationAnnotationNode  { 
     
     let sceneName = "art.scnassets/arrow.scn"
@@ -51,9 +51,10 @@ class OlaSceneNode : LocationAnnotationNode  {
         let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
             let imgName = "progressbar" + "\(Int(Double(d) * pow(2, toPow)) + 1)"
             //print(imgName)
-            let image = UIImage(named: imgName)
-            node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
-            node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
+            if let image = UIImage(named: imgName) {
+                node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
+                node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
+            }
         }
         let repeatAction = SCNAction.repeatForever(textureAction)
         node.runAction(repeatAction)
@@ -61,37 +62,14 @@ class OlaSceneNode : LocationAnnotationNode  {
 }
 
 extension UIColor {
+    class func getFontSideArrowColor() -> UIColor {
+        return self.init(red: 239.0/255.0, green: 255.0/255.0, blue: 33.0/255.0, alpha: 1.0)
+    }
+    class func getBackSideArrrowColor() -> UIColor {
+        return self.init(red: 212.0/255.0, green: 219.0/255.0, blue: 40.0/255.0, alpha: 1.0)
+    }
     class func getCustomColor() -> UIColor {
         return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.8)
     }
-    
-    
-    class func getRandomColor() -> UIColor {
-        let random = Int(arc4random_uniform(8))
-        switch random {
-        case 0: return UIColor.red
-        case 1: return UIColor.brown
-        case 2: return UIColor.green
-        case 3: return UIColor.yellow
-        case 4: return UIColor.blue
-        case 5: return UIColor.purple
-        case 6: return UIColor.cyan
-        case 7: return UIColor.orange
-        default: return UIColor.darkGray
-        }
-    }
-    
-    class func getOlacabColor() -> UIColor {
-        let random = Int(arc4random_uniform(5))
-        switch random {
-        case 0: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.75)
-        case 1: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.7)
-        case 2: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.95)
-        case 3: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.8)
-        case 4: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 1.0)
-        default: return self.init(red: 239.0/255.0, green: 253.0/255.0, blue: 65.0/255.0, alpha: 0.8)
-        }
-    }
-    
 }
 

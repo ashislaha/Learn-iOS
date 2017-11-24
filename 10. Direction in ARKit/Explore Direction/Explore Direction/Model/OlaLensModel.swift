@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import UIKit
 
-struct Constants {
+struct ARConstants {
     static let showIntro = "showIntro"
     static let storyboardName = "ARKit"
     static let detectingHeaderText = "Detecting your \nSurrounding ..."
@@ -23,6 +23,8 @@ class OlaLensModel {
     
     var carRegisterNumber : String?
     var carNumber : String?
+    var carImage : UIImage?
     var carLocation : CLLocationCoordinate2D?
     var sectionCoordinates : [CLLocationCoordinate2D]?
+    var userLocation : CLLocationCoordinate2D?
 }

@@ -4,5 +4,4 @@ use_frameworks!
 target ‘Explore Direction’ do
     #pod 'GoogleMaps'
     #pod 'GooglePlaces’
-    #pod ‘ARCL’
 end

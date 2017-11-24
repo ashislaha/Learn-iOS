@@ -140,7 +140,7 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5PN-LE-2gX">
                                                         <rect key="frame" x="0.0" y="0.0" width="188" height="81"/>
                                                         <subviews>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car" translatesAutoresizingMaskIntoConstraints="NO" id="K1a-LC-oLA">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car_image" translatesAutoresizingMaskIntoConstraints="NO" id="K1a-LC-oLA">
                                                                 <rect key="frame" x="0.0" y="0.0" width="188" height="81"/>
                                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             </imageView>
@@ -157,25 +157,25 @@
                                                         <rect key="frame" x="0.0" y="81" width="188" height="80.5"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="KA03AC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bhF-KH-eEo">
-                                                                <rect key="frame" x="16" y="8" width="84.5" height="17"/>
+                                                                <rect key="frame" x="16" y="9" width="84.5" height="17"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="6963" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ycb-TH-Ueu">
-                                                                <rect key="frame" x="16" y="25" width="84.5" height="20.5"/>
+                                                                <rect key="frame" x="16" y="26" width="84.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pickup point" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TYI-eg-3K0">
-                                                                <rect key="frame" x="104.5" y="8.5" width="75.5" height="16"/>
+                                                                <rect key="frame" x="104.5" y="8.5" width="75.5" height="18"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vwv-ya-qOa">
-                                                                <rect key="frame" x="104.5" y="24.5" width="75.5" height="20.5"/>
+                                                                <rect key="frame" x="104.5" y="26.5" width="75.5" height="20.5"/>
                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -292,6 +292,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="car" width="400" height="240"/>
+        <image name="car_image" width="400" height="240"/>
     </resources>
 </document>

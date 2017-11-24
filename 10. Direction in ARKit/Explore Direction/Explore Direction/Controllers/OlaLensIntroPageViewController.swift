@@ -8,10 +8,11 @@
 
 import UIKit
 
-protocol ShowOlaLensIntroDelegate {
+protocol ShowOlaLensIntroDelegate : class {
     func allowCameraClicked()
 }
 
+@available(iOS 11.0, *)
 class OlaLensIntroPageViewController : UIViewController {
 
     var delegate : ShowOlaLensIntroDelegate?

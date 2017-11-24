@@ -18,8 +18,10 @@ final class ARSetupUtility : NSObject {
     private override init(){}
     
     private var paths : [CLLocationCoordinate2D] = []
-    private var destination : CLLocationCoordinate2D?
     private var polyline : GMSPolyline?
+    
+    var destination : CLLocationCoordinate2D?
+    var distance : CLLocationDistance?
     
     // get angle
     public func getAngle(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Double {
@@ -48,6 +50,10 @@ final class ARSetupUtility : NSObject {
         return theta
     }
     
+    public func distanceMore(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D, limit : CLLocationDistance) -> Bool { // more than 'limit' meters
+        return CLLocation(latitude: location1.latitude, longitude: location1.longitude).distance(from: CLLocation(latitude: location2.latitude, longitude: location2.longitude)) > limit
+    }
+    
     // rotate node
     public func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
         if animation {
@@ -71,52 +77,12 @@ final class ARSetupUtility : NSObject {
         node.rotation = SCNVector4Make(0,0,1, Float(theta))
     }
     
-    // add gradient effect
-    public func addGradientEffect(node : SCNNode) {
-        
-        let startLocations : [NSNumber] = [0.0, 0.5, 1.0]
-        let endLocations : [NSNumber] =  [0.5, 0.75, 1.0]
-        
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.red.cgColor, UIColor.green.cgColor, UIColor.blue.cgColor]
-        gradient.locations = startLocations
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.7)
-        
-     
-        let animation = CABasicAnimation(keyPath: "locations")
-        animation.fromValue = startLocations
-        animation.toValue = endLocations
-        animation.autoreverses = true
-        animation.repeatCount = .infinity
-        gradient.add(animation, forKey: "animateGradient")
-        node.addAnimation(animation, forKey: "gradient it")
-    }
-    
-    public func contentAnimationChange(node : SCNNode) {
-        // shimmer animation
-        SCNTransaction.begin()
-        SCNTransaction.animationDuration = 3.0
-        
-        let easeInEaseOut = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        SCNTransaction.animationTimingFunction = easeInEaseOut
-        
-        SCNTransaction.completionBlock = {
-            self.contentAnimationChange(node: node)
-        }
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.getRandomColor()
-        SCNTransaction.commit()
-    }
-    
     // Get Input
     public func getInput(source : CLLocationCoordinate2D, destination : CLLocationCoordinate2D, mapView : GMSMapView, completionBlock : (([CLLocationCoordinate2D])->())?) {
         self.destination = nil
         self.paths = []
-        
         self.destination = destination
         drawPath(source: source, destination: destination, map: mapView) { [weak self] (pathMatrix) in
-            
-            //guard let pathMatrix = pathMatrix as? [CLLocationCoordinate2D] else { return }
             self?.paths = pathMatrix
             completionBlock?(pathMatrix)
         }
@@ -133,20 +99,6 @@ final class ARSetupUtility : NSObject {
                 self?.computePathMatrix(polyline: polyline,completionBlock:completionBlock)
             }
         }
-    }
-    
-    // open AR view
-    private func openARView() -> ARViewController? {
-        guard !paths.isEmpty, let arVC = UIStoryboard(name: Constants.storyboardName, bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController else { return nil }
-        
-        let model = OlaLensModel()
-        model.carLocation = destination
-        model.sectionCoordinates = paths
-        model.carRegisterNumber = "KA00421L"
-        model.carNumber = "0045"
-        arVC.model = model
-        //self.present(arVC, animated: true, completion: nil)
-        return arVC
     }
     
     // Draw Path on Map
@@ -179,7 +131,6 @@ final class ARSetupUtility : NSObject {
     private func computePath(source : CLLocationCoordinate2D , destination : CLLocationCoordinate2D, completionBlock: ((Any)->())?) {
         
         fetchRoute(source: source, destination: destination, completionHandler: { (polyline) in
-            
             if let polyline = polyline as? GMSPolyline {
                 // Add source to PATH
                 let path = GMSMutablePath()
