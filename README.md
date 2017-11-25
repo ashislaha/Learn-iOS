@@ -1071,3 +1071,99 @@ Controller is listening which cell is to be deleted :
     }
     }
 
+
+*******************************************************************************************************
+# PROJECT 11 : Animation of SCNNode in AR 
+*******************************************************************************************************
+
+There are mainly 3 ways, you can animate a SCNNode :
+
+## (1). Using CAAnimation : 
+
+    // (1). CAAnimation
+    private func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
+        if animation {
+            let rotation = CABasicAnimation(keyPath: "rotation")
+            rotation.fromValue = SCNVector4Make(0, 1, 0, 0) // along x-z plane
+            rotation.toValue = SCNVector4Make(0, 1, 0,  Float(theta))
+            rotation.duration = 5.0
+            node.addAnimation(rotation, forKey: "Rotate it")
+        }
+        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))  // along x-z plane
+    }
+
+## (2). Using SCNAction :
+
+    // (2). SCNAction
+    private func moveUpDown(node : SCNNode) {
+        let moveUp = SCNAction.moveBy(x: 0, y: 1, z: 0, duration: 1)
+        moveUp.timingMode = .easeInEaseOut
+        let moveDown = SCNAction.moveBy(x: 0, y: -1, z: 0, duration: 1)
+        moveDown.timingMode = .easeInEaseOut
+        let moveSequence = SCNAction.sequence([moveUp,moveDown])
+        let moveLoop = SCNAction.repeatForever(moveSequence)
+        node.runAction(moveLoop)
+    }
+    
+    // (2). addTexture using SCNAction
+    private func addTexture(node : SCNNode) {
+        let toPow: Double = 5
+        let timeDuration: Double = 15 / pow(2, toPow)
+        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
+            let imgName = "progressbar" + "\(Int(Double(d) * pow(2, toPow)) + 1)"
+            if let image = UIImage(named: imgName) {
+                node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
+                node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
+            }
+        }
+        let repeatAction = SCNAction.repeatForever(textureAction)
+        node.runAction(repeatAction)
+    }
+ 
+ ![img_0015](https://user-images.githubusercontent.com/10649284/33228037-e71421a0-d1d7-11e7-9568-c4953112901f.PNG)
+
+ 
+ ## (3). Using SCNTransaction :
+ 
+    // (3). SCNTransaction
+    private func rotateUsingTransaction(node : SCNNode, theta : Double) {
+        SCNTransaction.begin()
+        SCNTransaction.animationDuration = 5.0
+        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))
+        SCNTransaction.completionBlock = {
+            print("Transaction completed")
+        }
+        SCNTransaction.commit()
+    }
+
+## SceneView Construction : 
+
+    public class SceneView : ARSCNView {
+    
+    private var configuration  : ARWorldTrackingConfiguration!
+    
+    //MARK: Setup
+    
+    public func run() {
+        configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
+        configuration.worldAlignment = .gravityAndHeading
+        session.run(configuration) // Run the view's session
+    }
+    
+    public func pause() {
+        session.pause()
+    }
+    
+    public func resetConfig() {
+        session.run(configuration, options: .resetTracking)
+    }
+    
+    public func clearScene() {
+        scene = SCNScene()
+        resetConfig()
+    }
+    }
+
+## for more details, please check the origin project.
+
