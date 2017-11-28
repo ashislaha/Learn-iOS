@@ -34,8 +34,8 @@ class MapViewController: UIViewController , UIGestureRecognizerDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
-//        appDelegate.locationManager.stopUpdatingLocation()
+        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
+        appDelegate.locationManager.stopUpdatingLocation()
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -168,18 +168,10 @@ extension MapViewController : CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let location = locations.last else { return }
-        if let carLocation = destination {
-            let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
-            appDelegate.distance = distance
-        }
-        
         if mapView == nil {
             handleGoogleMap()
         }
     }
-    
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {

@@ -69,7 +69,7 @@ class ARViewController: UIViewController {
         let arrow = NodeCreator.getArrow(sceneName: arrowSceneName)
         arrow.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.red
         arrow.childNodes[1].geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        arrow.position = SCNVector3Make(0, 0, -1)
+        arrow.position = SCNVector3Make(0, 0, 1)
         rootNode.addChildNode(arrow)
         //rotateNode(node: arrow, theta: Double.pi, with: true) // basic animation
         //moveUpDown(node: arrow)
@@ -83,12 +83,12 @@ class ARViewController: UIViewController {
     private func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
         if animation {
             let rotation = CABasicAnimation(keyPath: "rotation")
-            rotation.fromValue = SCNVector4Make(0, 1, 0, 0) // along x-z plane
-            rotation.toValue = SCNVector4Make(0, 1, 0,  Float(theta))
+            rotation.fromValue = SCNVector4Make(0, 0, 1, 0) // along x-z plane
+            rotation.toValue = SCNVector4Make(0, 0, 1,  Float(theta))
             rotation.duration = 5.0
             node.addAnimation(rotation, forKey: "Rotate it")
         }
-        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))  // along x-z plane
+        node.rotation = SCNVector4Make(0, 0, 1, Float(theta))  // along x-z plane
     }
     
     // (2). SCNAction
@@ -137,7 +137,7 @@ extension ARViewController : ARSCNViewDelegate {
             rootNode = SCNNode()
             scene.rootNode.addChildNode(rootNode)
             //addTextNodes()
-            addArrowNode()
+           addArrowNode()
         }
     }
 }

@@ -178,6 +178,7 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
         sceneNode.addChildNode(locationNode)
     }
     
+    // at particular location
     public func addLocationNodeWithConfirmedLocation(locationNode: LocationNode) {
         if locationNode.location == nil || locationNode.locationConfirmed == false { return }
         updatePositionAndScaleOfLocationNode(locationNode: locationNode, initialSetup: true, animated: false)
@@ -279,6 +280,7 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
                     z: currentPosition.z - Float(locationTranslation.latitudeTranslation))
                 
                 locationNode.position = position
+                print(position)
                 locationNode.scale = SCNVector3(x: 1, y: 1, z: 1)
             }
         } else {

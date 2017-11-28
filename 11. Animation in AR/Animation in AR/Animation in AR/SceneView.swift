@@ -14,7 +14,6 @@ public class SceneView : ARSCNView {
     private var configuration  : ARWorldTrackingConfiguration!
     
     //MARK: Setup
-    
     public func run() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
@@ -27,7 +26,9 @@ public class SceneView : ARSCNView {
     }
     
     public func resetConfig() {
-        session.run(configuration, options: .resetTracking)
+        if let config = configuration {
+            session.run(config, options: .resetTracking)
+        }
     }
     
     public func clearScene() {

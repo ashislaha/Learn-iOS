@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		801CB8F51FC83D7E005D4836 /* LocationNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801CB8F31FC83D7E005D4836 /* LocationNode.swift */; };
 		801CB8F61FC83D7E005D4836 /* OlaSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801CB8F41FC83D7E005D4836 /* OlaSceneView.swift */; };
 		801CB8FB1FC83D9B005D4836 /* ARSetupUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801CB8F81FC83D9B005D4836 /* ARSetupUtility.swift */; };
 		801CB8FC1FC83D9B005D4836 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 801CB8F91FC83D9B005D4836 /* Extensions.swift */; };
@@ -30,7 +29,6 @@
 /* Begin PBXFileReference section */
 		33EC26EBDB6C7280B457F458 /* Pods_Explore_Direction.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Explore_Direction.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		58F1D33DF6DCCA2B7BEC2B46 /* Pods-Explore Direction.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Explore Direction.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Explore Direction/Pods-Explore Direction.debug.xcconfig"; sourceTree = "<group>"; };
-		801CB8F31FC83D7E005D4836 /* LocationNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationNode.swift; sourceTree = "<group>"; };
 		801CB8F41FC83D7E005D4836 /* OlaSceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OlaSceneView.swift; sourceTree = "<group>"; };
 		801CB8F81FC83D9B005D4836 /* ARSetupUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARSetupUtility.swift; sourceTree = "<group>"; };
 		801CB8F91FC83D9B005D4836 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 		801048701FC0182700EE6CBC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				801CB8F31FC83D7E005D4836 /* LocationNode.swift */,
 				801CB8F41FC83D7E005D4836 /* OlaSceneView.swift */,
 				8089E8761FBACE2100C292F6 /* OlaSceneNode.swift */,
 			);
@@ -299,7 +296,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				801CB8FB1FC83D9B005D4836 /* ARSetupUtility.swift in Sources */,
-				801CB8F51FC83D7E005D4836 /* LocationNode.swift in Sources */,
 				8029809B1FB5CBA4006D06A4 /* MapContainerViewController.swift in Sources */,
 				8031BB131FB943E80043E440 /* OlaLensIntroPageViewController.swift in Sources */,
 				80463CA41FB44C29005AA933 /* ReachabilityHelper.swift in Sources */,

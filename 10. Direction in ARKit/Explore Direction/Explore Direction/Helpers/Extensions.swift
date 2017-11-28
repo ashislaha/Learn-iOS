@@ -38,8 +38,8 @@ public extension CLLocation {
         self.init(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: Date())
     }
     
-    ///Translates distance in meters between two locations.
-    ///Returns the result as the distance in latitude and distance in longitude.
+    // Translates distance in meters between two locations.
+    // Returns the result as the distance in latitude and distance in longitude.
     
     public func translation(toLocation location: CLLocation) -> LocationTranslation {
         
@@ -112,7 +112,7 @@ public extension CLLocationCoordinate2D {
 }
 
 extension SceneLocationEstimate {
-    ///Compares the location's position to another position, to determine the translation between them
+    // Compares the location's position to another position, to determine the translation between them
     func locationTranslation(to position: SCNVector3) -> LocationTranslation {
         return LocationTranslation(
             latitudeTranslation: Double(self.position.z - position.z),
@@ -120,7 +120,7 @@ extension SceneLocationEstimate {
             altitudeTranslation: Double(position.y - self.position.y))
     }
     
-    ///Translates the location by comparing with a given position
+    // Translates the location by comparing with a given position
     func translatedLocation(to position: SCNVector3) -> CLLocation {
         let translation = self.locationTranslation(to: position)
         let translatedLocation = self.location.translatedLocation(with: translation)
@@ -161,8 +161,8 @@ extension SCNNode {
 
 @available(iOS 11.0, *)
 extension SCNVector3 {
-    ///Calculates distance between vectors
-    ///Doesn't include the y axis, matches functionality of CLLocation 'distance' function.
+    // Calculates distance between vectors
+    // Doesn't include the y axis, matches functionality of CLLocation 'distance' function.
     func distance(to anotherVector: SCNVector3) -> Float {
         return sqrt(pow(anotherVector.x - x, 2) + pow(anotherVector.z - z, 2))
     }

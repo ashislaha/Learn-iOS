@@ -43,7 +43,7 @@ class NodeCreator {
         
         let bubbleNodeParent = SCNNode()
         bubbleNodeParent.addChildNode(bubbleNode)
-        bubbleNodeParent.constraints = [billboardConstraint]
+        bubbleNodeParent.constraints = []
         bubbleNodeParent.position = position
         
         return bubbleNodeParent
