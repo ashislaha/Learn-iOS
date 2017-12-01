@@ -23,6 +23,48 @@ final class ARSetupUtility : NSObject {
     var destination : CLLocationCoordinate2D?
     var distance : CLLocationDistance?
     
+    // get 3D arrow
+    public func getArrow3D(sceneName : String, downArrow : Bool = false) -> SCNNode {
+        guard let scene = SCNScene(named:sceneName) else { return SCNNode() }
+        if scene.rootNode.childNodes.count == 2 {
+            scene.rootNode.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.getFrontSideArrowColor()
+            scene.rootNode.childNodes[1].geometry?.firstMaterial?.diffuse.contents = UIColor.getBackSideArrrowColor()
+        } else {
+            for each in scene.rootNode.childNodes {
+                each.geometry?.firstMaterial?.diffuse.contents = UIColor.getFrontSideArrowColor()
+            }
+        }
+        scene.rootNode.scale = SCNVector3Make(2, 2, 2)
+        if downArrow {
+            scene.rootNode.rotation = SCNVector4Make(0, 0, 1, -Float(Double.pi/2))
+        }
+        return scene.rootNode
+    }
+    
+    // add texture
+    public func addTexture(node : SCNNode, backward : Bool = false) {
+        let toPow: Double = 3
+        let timeDuration: Double = 15 / pow(2, toPow)
+        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
+            let num = Int(Double(d) * pow(2, toPow)) + 1
+            let imageName = backward ? "b\(num)" : "f\(num)"
+            //print(imgName)
+            if let image = UIImage(named: imageName) {
+                let material1 = SCNMaterial()
+                material1.diffuse.contents = image
+                
+                let material2 = SCNMaterial()
+                material2.diffuse.contents = UIColor.getFrontSideArrowColor()
+                
+                node.childNodes[0].geometry?.firstMaterial = material1
+                node.childNodes[1].geometry?.firstMaterial = material2
+            }
+        }
+        let repeatAction = SCNAction.repeatForever(textureAction)
+        node.runAction(repeatAction)
+    }
+    
+    
     // get angle
     public func getAngle(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Double {
         let dx = location2.longitude - location1.longitude

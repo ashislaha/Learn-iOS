@@ -51,7 +51,7 @@ class NodeCreator {
     
     class func getArrow(sceneName : String, downArrow : Bool = false) -> SCNNode {
         guard let scene = SCNScene(named:sceneName) else { return SCNNode() }
-        scene.rootNode.scale = SCNVector3Make(0.5, 0.5, 0.5)
+        scene.rootNode.scale = SCNVector3Make(0.3, 0.3, 0.3)
         if downArrow {
             scene.rootNode.rotation = SCNVector4Make(0, 0, 1, -Float(Double.pi/2))
         }

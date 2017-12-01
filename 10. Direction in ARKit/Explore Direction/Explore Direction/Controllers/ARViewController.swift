@@ -195,13 +195,17 @@ class ARViewController: UIViewController {
             let nodeLocation = CLLocation(coordinate: location, altitude: altitude)
             var node : OlaSceneNode!
             if !downwards {
-                node = OlaSceneNode(location: nodeLocation)
-                node.scaleRelativeToDistance = true
                 let theta = ARSetupUtility.shared.getAngle(location1: previousLocation, location2: location)
+                let backward = theta <= Double.pi/2 || theta >= 3*Double.pi/2 || theta <= -Double.pi/2 ? false : true
+                
+                node = OlaSceneNode(location: nodeLocation, downArrow: downwards, backward: backward)
+                node.scaleRelativeToDistance = true
                 ARSetupUtility.shared.rotateNode(node: node, theta: theta)
             } else {
-                node = OlaSceneNode(location: nodeLocation, downArrow : true)
+                
+                node = OlaSceneNode(location: nodeLocation, downArrow: downwards)
                 node.scaleRelativeToDistance = true
+                
                 let billboardConstraint = SCNBillboardConstraint()
                 billboardConstraint.freeAxes = .Y
                 node.constraints = [billboardConstraint] // make it focus to camera always

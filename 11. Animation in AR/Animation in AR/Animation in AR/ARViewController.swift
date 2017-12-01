@@ -32,6 +32,7 @@ class ARViewController: UIViewController {
             sceneView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
+   
     
     //MARK: view controller life cycle
     override func viewDidLoad() {
@@ -67,28 +68,52 @@ class ARViewController: UIViewController {
     
     private func addArrowNode() {
         let arrow = NodeCreator.getArrow(sceneName: arrowSceneName)
-        arrow.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        arrow.childNodes[1].geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        arrow.position = SCNVector3Make(0, 0, 1)
+        arrow.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.getBackSideArrrowColor
+        arrow.childNodes[1].geometry?.firstMaterial?.diffuse.contents = UIColor.getFrontSideArrowColor
+        arrow.position = SCNVector3Make(0, 0, -0.4)
         rootNode.addChildNode(arrow)
-        //rotateNode(node: arrow, theta: Double.pi, with: true) // basic animation
+        //rotateNode(node: arrow, theta: Double.pi, with: false) // basic animation
         //moveUpDown(node: arrow)
-        addTexture(node: arrow)
+        addTexture(node: arrow,backward: true)
         //rotateUsingTransaction(node: arrow, theta: Double.pi)
     }
     
     //MARK: Do animation
     
+    // (2). addTexture using SCNAction
+    private func addTexture(node : SCNNode, backward : Bool = false) {
+        let toPow: Double = 3
+        let timeDuration: Double = 15 / pow(2, toPow)
+        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
+            let num = Int(Double(d) * pow(2, toPow)) + 1
+            let imgName = backward ? "b\(num)" : "f\(num)"
+            node.rotation = backward ? SCNVector4Make(0, 1, 0, Float(Double.pi)) : SCNVector4Make(0, 1, 0, 0)
+            if let image = UIImage(named: imgName) {
+                let material1 = SCNMaterial()
+                material1.diffuse.contents = image
+                
+                let material2 = SCNMaterial()
+                material2.diffuse.contents = UIColor.getFrontSideArrowColor()
+                
+                node.childNodes[0].geometry?.firstMaterial = material1
+                node.childNodes[1].geometry?.firstMaterial = material2
+            }
+        }
+        let repeatAction = SCNAction.repeatForever(textureAction)
+        node.runAction(repeatAction)
+    }
+    
+    
     // (1). CAAnimation
     private func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
         if animation {
             let rotation = CABasicAnimation(keyPath: "rotation")
-            rotation.fromValue = SCNVector4Make(0, 0, 1, 0) // along x-z plane
-            rotation.toValue = SCNVector4Make(0, 0, 1,  Float(theta))
+            rotation.fromValue = SCNVector4Make(0,1,0,0) // along x-z plane
+            rotation.toValue = SCNVector4Make(0,1,0,Float(theta))
             rotation.duration = 5.0
             node.addAnimation(rotation, forKey: "Rotate it")
         }
-        node.rotation = SCNVector4Make(0, 0, 1, Float(theta))  // along x-z plane
+        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))  // along x-z plane
     }
     
     // (2). SCNAction
@@ -100,21 +125,6 @@ class ARViewController: UIViewController {
         let moveSequence = SCNAction.sequence([moveUp,moveDown])
         let moveLoop = SCNAction.repeatForever(moveSequence)
         node.runAction(moveLoop)
-    }
-    
-    // (2). addTexture using SCNAction
-    private func addTexture(node : SCNNode) {
-        let toPow: Double = 5
-        let timeDuration: Double = 15 / pow(2, toPow)
-        let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
-            let imgName = "progressbar" + "\(Int(Double(d) * pow(2, toPow)) + 1)"
-            if let image = UIImage(named: imgName) {
-                node.childNodes[0].geometry?.firstMaterial?.diffuse.contents = image
-                node.childNodes[1].geometry?.firstMaterial?.diffuse.contents = image
-            }
-        }
-        let repeatAction = SCNAction.repeatForever(textureAction)
-        node.runAction(repeatAction)
     }
     
     // (3). SCNTransaction
@@ -171,3 +181,32 @@ extension ARViewController {
     }
 }
 
+extension UIColor {
+    class func getFrontSideArrowColor() -> UIColor {
+        return self.init(red: 239.0/255.0, green: 255.0/255.0, blue: 33.0/255.0, alpha: 1.0)
+    }
+    class func getBackSideArrrowColor() -> UIColor {
+        return self.init(red: 212.0/255.0, green: 219.0/255.0, blue: 40.0/255.0, alpha: 1.0)
+    }
+}
+
+extension UIImage {
+    
+    static func imageRotatedByDegrees(oldImage: UIImage, deg degrees: CGFloat) -> UIImage {
+        let size = oldImage.size
+        UIGraphicsBeginImageContext(size)
+        
+        let bitmap: CGContext = UIGraphicsGetCurrentContext()!
+        //Move the origin to the middle of the image so we will rotate and scale around the center.
+        bitmap.translateBy(x: size.width / 2, y: size.height / 2)
+        //Rotate the image context
+        bitmap.rotate(by: (degrees * CGFloat(Double.pi / 180)))
+        //Now, draw the rotated/scaled image into the context
+        bitmap.scaleBy(x: 1.0, y: -1.0)
+        let origin = CGPoint(x: -size.width / 2, y: -size.width / 2)
+        bitmap.draw(oldImage.cgImage!, in: CGRect(origin: origin, size: size))
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+}
