@@ -1165,5 +1165,5 @@ There are mainly 3 ways, you can animate a SCNNode :
     }
     }
 
-## for more details, please check the origin project.
+## for more details, please check the original project.
 
