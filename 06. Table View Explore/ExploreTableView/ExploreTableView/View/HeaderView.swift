@@ -12,6 +12,7 @@ class HeaderView : UITableViewHeaderFooterView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = .blue
     }
     
     private let profilePic : UIImageView = {
@@ -29,8 +30,8 @@ class HeaderView : UITableViewHeaderFooterView {
     private let headerLabel : UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "To Do List"
-        label.textColor = .purple
+        label.text = "Header"
+        label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textAlignment = .center
         label.backgroundColor = .clear

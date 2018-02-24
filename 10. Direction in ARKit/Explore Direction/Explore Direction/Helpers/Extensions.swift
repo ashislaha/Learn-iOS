@@ -68,6 +68,14 @@ public extension CLLocation {
     }
 }
 
+extension CLLocation {
+    static func getDistance(coordinate1 : CLLocationCoordinate2D, coordinate2 : CLLocationCoordinate2D) -> CLLocationDistance {
+        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
+        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+        return location1.distance(from: location2)
+    }
+}
+
 extension CGPoint {
     static func pointWithVector(vector: SCNVector3) -> CGPoint {
         return CGPoint(x: CGFloat(vector.x), y: CGFloat(0 - vector.z))

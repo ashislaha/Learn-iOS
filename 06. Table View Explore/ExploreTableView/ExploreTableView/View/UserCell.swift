@@ -62,6 +62,7 @@ class UserCell: UITableViewCell {
     
     private func viewSetup() {
        // can do other set up here if you want.
+        backgroundColor = .yellow
     }
 }
 

@@ -24,6 +24,7 @@ class OlaLensModel {
     var carRegisterNumber : String?
     var carNumber : String?
     var carImage : UIImage?
+    var carUpdateLabel : String?
     var carLocation : CLLocationCoordinate2D?
     var sectionCoordinates : [CLLocationCoordinate2D]?
     var userLocation : CLLocationCoordinate2D?

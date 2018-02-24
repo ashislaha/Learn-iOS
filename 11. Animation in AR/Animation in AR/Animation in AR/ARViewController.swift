@@ -9,9 +9,18 @@
 import UIKit
 import ARKit
 
+
+enum GeometryType {
+    case Box
+    case Pyramid
+    case Capsule
+    case Cone
+    case Cylinder
+}
+
 class ARViewController: UIViewController {
 
-    private var rootNode : SCNNode!
+    var rootNode : SCNNode!
     private let arrowSceneName = "art.scnassets/arrow.scn"
     
     // scene view
@@ -53,32 +62,108 @@ class ARViewController: UIViewController {
     }
 
     //MARK: add node
-    private func addTextNodes() {
+    func addTextNodes() {
         let textNode = SCNNode()
-        textNode.addChildNode(NodeCreator.create3DText("Ashis", position: SCNVector3Make(0, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Pushpak", position: SCNVector3Make(0.5, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Nihar", position: SCNVector3Make(1, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Himanshu", position: SCNVector3Make(1.5, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Abhra", position: SCNVector3Make(-0.5, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Deepanshu", position: SCNVector3Make(-1.0, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Dheeraj", position: SCNVector3Make(-1.5, 0, -0.5)))
-        textNode.addChildNode(NodeCreator.create3DText("Arnav", position: SCNVector3Make(-2.0, 0, -0.5)))
+        textNode.addChildNode(NodeCreator.create3DText("Hello Hackathon", position: SCNVector3Make(0, 0.15, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Pushpak", position: SCNVector3Make(0.5, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Nihar", position: SCNVector3Make(1, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Himanshu", position: SCNVector3Make(1.5, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Abhra", position: SCNVector3Make(-0.5, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Deepanshu", position: SCNVector3Make(-1.0, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Dheeraj", position: SCNVector3Make(-1.5, 0, -0.5)))
+//        textNode.addChildNode(NodeCreator.create3DText("Arnav", position: SCNVector3Make(-2.0, 0, -0.5)))
         rootNode?.addChildNode(textNode)
     }
     
-    private func addArrowNode() {
+    func addArrowNode() {
         let arrow = NodeCreator.getArrow(sceneName: arrowSceneName)
-        arrow.childNodes[0].geometry?.firstMaterial?.diffuse.contents = UIColor.getBackSideArrrowColor
-        arrow.childNodes[1].geometry?.firstMaterial?.diffuse.contents = UIColor.getFrontSideArrowColor
-        arrow.position = SCNVector3Make(0, 0, -0.4)
+        arrow.position = SCNVector3Make(0, 0, -1)
         rootNode.addChildNode(arrow)
-        //rotateNode(node: arrow, theta: Double.pi, with: false) // basic animation
+        
+        //let theta = getAngle(dx: 1, dy: 11)
+        rotateNode(node: arrow, theta: 2 * Double.pi, with: true) // basic animation
+        let backward = false //theta <= Double.pi/2 || theta <= -Double.pi/2 ? false : true
+        addTexture(node: arrow,backward: backward)
+        print("animation direction backward = \(backward)")
+        
         //moveUpDown(node: arrow)
-        addTexture(node: arrow,backward: true)
-        //rotateUsingTransaction(node: arrow, theta: Double.pi)
+        //rotateUsingTransaction(node: arrow, theta: theta)
+    }
+
+    func getGeometry(type: GeometryType) -> SCNGeometry {
+        switch type {
+        case .Box:          return SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0.05)
+        case .Pyramid:      return SCNPyramid(width: 0.2, height: 0.2, length: 0.2)
+        case .Capsule:      return SCNCapsule(capRadius: 0.2, height: 0.1)
+        case .Cone:         return SCNCone(topRadius: 0.0, bottomRadius: 0.2, height: 0.4)
+        case .Cylinder:     return SCNCylinder(radius: 0.05, height: 0.2)
+        }
+    }
+    
+    func twoNodesExperiment() {
+        
+        // always focus on camera view
+        let geometry1 : SCNGeometry! = getGeometry(type: .Pyramid)
+        geometry1.firstMaterial?.diffuse.contents = UIColor.red
+        let node1 = SCNNode(geometry: geometry1)
+        node1.position = SCNVector3Make(0.4, 0, -0.5)
+        
+        let billboardConstraint = SCNBillboardConstraint()
+        billboardConstraint.freeAxes = SCNBillboardAxis.Y
+        node1.constraints = [billboardConstraint]
+        rootNode.addChildNode(node1)
+        
+        // two nodes focusing each other
+        let geometry2 = getGeometry(type: .Cylinder)
+        geometry2.firstMaterial?.diffuse.contents = UIColor.green
+        let node2 = SCNNode(geometry: geometry2)
+        node2.position = SCNVector3Make(-0.1, 0, -0.5)
+
+        let geometry3 = getGeometry(type: .Box)
+        geometry3.firstMaterial?.diffuse.contents = UIColor.blue
+        let node3 = SCNNode(geometry: geometry3)
+        node3.position = SCNVector3Make(0.2, 0, -0.5)
+        
+        let lookAtConstraints = SCNLookAtConstraint(target: node3)
+        node2.constraints = [lookAtConstraints]
+        
+        [node2, node3].forEach{ rootNode.addChildNode($0) }
     }
     
     //MARK: Do animation
+    public func getAngle(dx: Double, dy: Double) -> Double {
+        var theta = 0.0
+        
+        theta += atan(Double(dy/dx))
+        print("tan-inverse theta: \(theta * 180 / Double.pi)")
+        
+        if dx < 0 && dy > 0 || dx < 0 && dy < 0 { // 2nd, 3rd coordinates, no need to add anything for 1st coordinate and 4th coordinates
+            theta += Double.pi
+        } else if theta == .nan && dy >= 0 { // dx = 0
+            theta = Double.pi/2 // 90 Degree
+        } else if theta == .nan && dy < 0 { // dx = 0
+            theta = -Double.pi/2 // -90 Degree
+        } else if theta == 0.0 && dx < 0 { // dy = 0
+            theta = Double.pi // 180 degree
+        } // else if theta == 0.0 && dx>= 0 { theta = 0.0 }
+        
+        print("dx = \(dx) and dy =\(dy) Angle: \(theta * 180 / Double.pi) ")
+        return theta
+    }
+    
+    // (1). CAAnimation
+    private func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
+        if animation {
+            let rotation = CABasicAnimation(keyPath: "rotation")
+            rotation.fromValue = SCNVector4Make(0,1,0,0) // along x-z plane
+            rotation.toValue = SCNVector4Make(0,1,0,Float(theta))
+            rotation.duration = 3.0
+            rotation.repeatCount = Float.infinity
+            node.addAnimation(rotation, forKey: "Rotate it")
+        }
+        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))  // along x-z plane
+        print("rotating node with angel :\(theta)")
+    }
     
     // (2). addTexture using SCNAction
     private func addTexture(node : SCNNode, backward : Bool = false) {
@@ -87,7 +172,6 @@ class ARViewController: UIViewController {
         let textureAction = SCNAction.customAction(duration: timeDuration) { (node, d) in
             let num = Int(Double(d) * pow(2, toPow)) + 1
             let imgName = backward ? "b\(num)" : "f\(num)"
-            node.rotation = backward ? SCNVector4Make(0, 1, 0, Float(Double.pi)) : SCNVector4Make(0, 1, 0, 0)
             if let image = UIImage(named: imgName) {
                 let material1 = SCNMaterial()
                 material1.diffuse.contents = image
@@ -101,19 +185,6 @@ class ARViewController: UIViewController {
         }
         let repeatAction = SCNAction.repeatForever(textureAction)
         node.runAction(repeatAction)
-    }
-    
-    
-    // (1). CAAnimation
-    private func rotateNode(node : SCNNode, theta : Double, with animation : Bool = false) {
-        if animation {
-            let rotation = CABasicAnimation(keyPath: "rotation")
-            rotation.fromValue = SCNVector4Make(0,1,0,0) // along x-z plane
-            rotation.toValue = SCNVector4Make(0,1,0,Float(theta))
-            rotation.duration = 5.0
-            node.addAnimation(rotation, forKey: "Rotate it")
-        }
-        node.rotation = SCNVector4Make(0, 1, 0, Float(theta))  // along x-z plane
     }
     
     // (2). SCNAction
@@ -137,76 +208,5 @@ class ARViewController: UIViewController {
         }
         SCNTransaction.commit()
     }
-    
 }
 
-//MARK: ARSCNViewDelegate
-extension ARViewController : ARSCNViewDelegate {
-    func renderer(_ renderer: SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        if rootNode == nil { // this is one time execution
-            rootNode = SCNNode()
-            scene.rootNode.addChildNode(rootNode)
-            //addTextNodes()
-           addArrowNode()
-        }
-    }
-}
-
-//MARK: ARSessionDelegate
-extension ARViewController : ARSessionDelegate {
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        showAlert(header: "Session Failure", message: "\(error.localizedDescription)")
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        showAlert(header: "Session Failure", message: "Session Was Interrupted")
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        showAlert(header: "Session Restore", message: "Session Interruption ended")
-    }
-}
-
-// Error Handling pop up
-extension ARViewController {
-    
-    fileprivate func showAlert(header : String? = "Header", message : String? = "Message")  {
-        let alertController = UIAlertController(title: header, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { (alert) in
-            alertController.dismiss(animated: true, completion: nil)
-        }
-        alertController.addAction(okAction)
-        present(alertController, animated: true, completion: nil)
-    }
-}
-
-extension UIColor {
-    class func getFrontSideArrowColor() -> UIColor {
-        return self.init(red: 239.0/255.0, green: 255.0/255.0, blue: 33.0/255.0, alpha: 1.0)
-    }
-    class func getBackSideArrrowColor() -> UIColor {
-        return self.init(red: 212.0/255.0, green: 219.0/255.0, blue: 40.0/255.0, alpha: 1.0)
-    }
-}
-
-extension UIImage {
-    
-    static func imageRotatedByDegrees(oldImage: UIImage, deg degrees: CGFloat) -> UIImage {
-        let size = oldImage.size
-        UIGraphicsBeginImageContext(size)
-        
-        let bitmap: CGContext = UIGraphicsGetCurrentContext()!
-        //Move the origin to the middle of the image so we will rotate and scale around the center.
-        bitmap.translateBy(x: size.width / 2, y: size.height / 2)
-        //Rotate the image context
-        bitmap.rotate(by: (degrees * CGFloat(Double.pi / 180)))
-        //Now, draw the rotated/scaled image into the context
-        bitmap.scaleBy(x: 1.0, y: -1.0)
-        let origin = CGPoint(x: -size.width / 2, y: -size.width / 2)
-        bitmap.draw(oldImage.cgImage!, in: CGRect(origin: origin, size: size))
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return newImage
-    }
-}

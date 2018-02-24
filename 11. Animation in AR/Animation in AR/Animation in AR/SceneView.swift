@@ -17,7 +17,7 @@ public class SceneView : ARSCNView {
     public func run() {
         configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = .horizontal
-        configuration.worldAlignment = .gravityAndHeading
+        configuration.worldAlignment = .gravity
         session.run(configuration) // Run the view's session
     }
     

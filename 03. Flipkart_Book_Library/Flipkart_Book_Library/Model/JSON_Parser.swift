@@ -25,52 +25,41 @@ struct Constants {
     static let author = "author"
     static let genre = "genre"
     static let country = "country"
-    static let capacity : Int = 100*1024*1024 // bytes (i.e. 100 MB)
+    static let url = "http://www.mocky.io/v2/59df0d520f00005e05173a79" // URL for JSON
 }
 
 class Parser {
     
-    static let url = "http://www.mocky.io/v2/59df0d520f00005e05173a79" // URL for JSON
-    
     //MARK:- Books parsing
     static func parseJSON(completionBlock : @escaping ([Book])->()) {
-        
-        guard let url = URL(string: Parser.url) else { return }
-        let session = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data else { return }
-            guard let books = try? JSONDecoder().decode([Book].self, from: data) else { return }
-            completionBlock(books)
-        }
-        session.resume()
+        guard let path = Bundle.main.url(forResource: "BooksLibrary", withExtension: "json"), let data = try? Data(contentsOf: path) else { return }
+        guard let books = try? JSONDecoder().decode([Book].self, from: data) else { return }
+        completionBlock(books)
     }
     
     static func createModifiedModel(books : [Book] , completionBlock : ([(name : String, tag : String)])->() ) {
-        
         // map all
         let authors = books.map { $0.author_name }
         let genres = books.map { $0.genre }
         let countries = books.map{ $0.author_country }
-
         // put it into a Set to reduce the multiple occurance
         let uniqueAuthors = Array(Set(authors))
         let uniqueGenres = Array(Set(genres))
         let uniqueCountries = Array(Set(countries))
-        
         // create the result sets
         var results : [(name : String, tag : String)] = []
         for each in uniqueAuthors { results.append((name: each,tag: Constants.author)) }
         for each in uniqueGenres { results.append((name: each,tag: Constants.genre)) }
         for each in uniqueCountries { results.append((name: each,tag: Constants.country)) }
-        
         completionBlock(results)
     }
     
     // searchTag may be "author_name"/"author_country"/"genre"
     static func getModel(books : [Book], tagName : String, searchName : String ) -> [Book] {
         switch tagName {
-        case Constants.author:   return books.filter{ $0.author_name == searchName }
-        case Constants.country : return books.filter { $0.author_country == searchName }
-        case Constants.genre :   return books.filter{ $0.genre == searchName }
+        case Constants.author: return books.filter{ $0.author_name == searchName }
+        case Constants.country: return books.filter { $0.author_country == searchName }
+        case Constants.genre: return books.filter{ $0.genre == searchName }
         default: return []
         }
     }

@@ -13,20 +13,16 @@ import MapKit
 
 @available(iOS 11.0, *)
 public protocol SceneLocationViewDelegate: class {
-    func sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: OlaSceneView, position: SCNVector3, location: CLLocation)
-    func sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: OlaSceneView, position: SCNVector3, location: CLLocation)
-    func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: OlaSceneView, node: LocationNode)
-    func sceneLocationViewDidSetupSceneNode(sceneLocationView: OlaSceneView, sceneNode: SCNNode)
-    func sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: OlaSceneView, locationNode: LocationNode)
+    func distanceFromUserlocationToDestination(distance : CLLocationDistance)
 }
 
 ///Different methods which can be used when determining locations (such as the user's location).
 public enum LocationEstimateMethod {
-    ///Only uses core location data.
+    // Only uses core location data.
     case coreLocationDataOnly
     
-    ///Combines knowledge about movement through the AR world with
-    ///the most relevant Core Location estimate (based on accuracy and time).
+    // Combines knowledge about movement through the AR world with
+    // the most relevant Core Location estimate (based on accuracy and time).
     case mostRelevantEstimate
 }
 
@@ -34,7 +30,7 @@ public enum LocationEstimateMethod {
 public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
     
     private static let sceneLimit = 100.0
-    public weak var locationDelegate: SceneLocationViewDelegate?
+    public weak var sceneViewDelegate : SceneLocationViewDelegate?
     public var locationEstimateMethod: LocationEstimateMethod = .mostRelevantEstimate
     
     let locationManager = LocationManager()
@@ -49,12 +45,10 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
                 for locationNode in locationNodes {
                     sceneNode!.addChildNode(locationNode)
                 }
-                locationDelegate?.sceneLocationViewDidSetupSceneNode(sceneLocationView: self, sceneNode: sceneNode!)
             }
         }
     }
     
-    private var updateEstimatesTimer: Timer?
     private var didFetchInitialLocation = false
     
     var showFeaturePoints = false
@@ -92,17 +86,13 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
        
         // Run the view's session
         session.run(configuration)
-        updateEstimatesTimer?.invalidate()
-        updateEstimatesTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(OlaSceneView.updateLocationData), userInfo: nil, repeats: true)
     }
     
     public func pause() {
         session.pause()
-        updateEstimatesTimer?.invalidate()
-        updateEstimatesTimer = nil
     }
     
-    @objc private func updateLocationData() {
+    private func updateLocationData() {
         removeOldLocationEstimates()
         confirmLocationOfDistantLocationNodes()
         updatePositionAndScaleOfLocationNodes()
@@ -124,7 +114,6 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
         if let position = currentScenePosition() {
             let sceneLocationEstimate = SceneLocationEstimate(location: location, position: position)
             self.sceneLocationEstimates.append(sceneLocationEstimate)
-            locationDelegate?.sceneLocationViewDidAddSceneLocationEstimate(sceneLocationView: self, position: position, location: location)
         }
     }
     
@@ -140,10 +129,6 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
         sceneLocationEstimates = sceneLocationEstimates.filter({
             let point = CGPoint.pointWithVector(vector: $0.position)
             let radiusContainsPoint = currentPoint.radiusContainsPoint(radius: CGFloat(OlaSceneView.sceneLimit), point: point)
-            
-            if !radiusContainsPoint {
-                locationDelegate?.sceneLocationViewDidRemoveSceneLocationEstimate(sceneLocationView: self, position: $0.position, location: $0.location)
-            }
             return radiusContainsPoint
         })
     }
@@ -230,7 +215,6 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
     private func confirmLocationOfLocationNode(_ locationNode: LocationNode) {
         locationNode.location = locationOfLocationNode(locationNode)
         locationNode.locationConfirmed = true
-        locationDelegate?.sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: self, node: locationNode)
     }
     
     func updatePositionAndScaleOfLocationNodes() {
@@ -263,7 +247,8 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
                 let adjustedTranslation = SCNVector3(
                     x: Float(locationTranslation.longitudeTranslation) * scale,
                     y: Float(locationTranslation.altitudeTranslation) * scale,
-                    z: Float(locationTranslation.latitudeTranslation) * scale)
+                    z: Float(locationTranslation.latitudeTranslation) * scale
+                )
                 
                 let position = SCNVector3(
                     x: currentPosition.x + adjustedTranslation.x,
@@ -311,7 +296,6 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
             annotationNode.pivot = SCNMatrix4MakeTranslation(0, -1.1 * scale, 0)
         }
         SCNTransaction.commit()
-        locationDelegate?.sceneLocationViewDidUpdateLocationAndScaleOfLocationNode(sceneLocationView: self, locationNode: locationNode)
     }
     
     //MARK: ARSCNViewDelegate
@@ -372,7 +356,7 @@ public class OlaSceneView : ARSCNView, ARSCNViewDelegate {
         sceneNode?.eulerAngles.y += Float(1).degreesToRadians
     }
     
-    ///Resets the scene heading to 0
+    // Resets the scene heading to 0
     func resetSceneHeading() {
         sceneNode?.eulerAngles.y = 0
     }
@@ -386,5 +370,10 @@ extension OlaSceneView: LocationManagerDelegate {
     }
     
     func locationManagerDidUpdateHeading(_ locationManager: LocationManager, heading: CLLocationDirection, accuracy: CLLocationAccuracy) {
+    }
+    
+    func updateDistance(distance: CLLocationDistance) {
+        sceneViewDelegate?.distanceFromUserlocationToDestination(distance: distance)
+        updateLocationData()
     }
 }

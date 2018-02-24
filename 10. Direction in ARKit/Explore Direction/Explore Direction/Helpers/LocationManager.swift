@@ -12,6 +12,7 @@ import CoreLocation
 protocol LocationManagerDelegate: class {
     func locationManagerDidUpdateLocation(_ locationManager: LocationManager, location: CLLocation)
     func locationManagerDidUpdateHeading(_ locationManager: LocationManager, heading: CLLocationDirection, accuracy: CLLocationDirection)
+    func updateDistance(distance : CLLocationDistance)
 }
 
 // Handles retrieving the location and heading from CoreLocation
@@ -66,7 +67,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         if #available(iOS 11.0, *) {
             if let carLocation = ARSetupUtility.shared.destination, let location = locations.last {
                 let distance = location.distance(from: CLLocation(latitude: carLocation.latitude, longitude: carLocation.longitude))
-                ARSetupUtility.shared.distance = distance
+                delegate?.updateDistance(distance: distance)
             }
         }
     }

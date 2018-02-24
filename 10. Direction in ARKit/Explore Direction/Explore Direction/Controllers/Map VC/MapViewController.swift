@@ -1,0 +1,332 @@
+//
+//  MapViewController.swift
+//  Explore Direction
+//
+//  Created by Ashis Laha on 09/11/17.
+//  Copyright © 2017 Ashis Laha. All rights reserved.
+//
+
+import UIKit
+import GoogleMaps
+import AVFoundation
+
+let defaultZoomLabel : Float = 19.0
+
+class MapViewController: UIViewController , UIGestureRecognizerDelegate {
+    
+    let polylineStokeWidth : CGFloat = 5.0
+    
+    private var mapView : GMSMapView!
+    private var polyline : GMSPolyline!
+    private var dropLocationMarker : GMSMarker!
+    
+    private var paths : [CLLocationCoordinate2D] = []
+    private var destination : CLLocationCoordinate2D?
+    
+    //MARK: View Controller Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
+        appDelegate.locationManager.delegate = self
+        appDelegate.locationManager.startUpdatingLocation()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
+        appDelegate.locationManager.stopUpdatingLocation()
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        registerNotification()
+        reachabilityCheck()
+    }
+    
+    private func reachabilityCheck() {
+        if !ReachabilityHelper.isInternetAvailable() {
+            let alert = UIAlertController(title: "No Internet", message: "Please connect to Internet", preferredStyle: .alert)
+            let okButton = UIAlertAction(title: "Ok", style: .default, handler: { (button) in
+                alert.dismiss(animated: true, completion: nil)
+            })
+            alert.addAction(okButton)
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func registerNotification() {
+        NotificationCenter.default.addObserver(forName: .UIApplicationWillEnterForeground, object: nil, queue: OperationQueue.main) { [weak self] (notification) in
+            self?.reachabilityCheck()
+        }
+    }
+    
+    @IBAction func clear(_ sender: UIBarButtonItem) {
+        polyline?.map = nil
+        dropLocationMarker?.map = nil
+        paths = []
+        destination = nil
+    }
+    
+    @IBAction func viewOpen(_ sender: UIBarButtonItem) {
+        guard !paths.isEmpty else { return }
+        
+        if !isOlaLensIntoShownBefore() {
+            let storyboard = UIStoryboard(name: ARConstants.storyboardName, bundle: nil)
+            guard let introScreenVC = storyboard.instantiateViewController(withIdentifier: "OlaLensIntroPageViewController") as? OlaLensIntroPageViewController else { return }
+            introScreenVC.delegate = self
+            present(introScreenVC, animated: true, completion: nil)
+        } else {
+            openARView()
+        }
+    }
+    
+    // let access the camera
+    private func isOlaLensIntoShownBefore() -> Bool {
+        let authStatus = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        return authStatus == .authorized
+    }
+    
+    private func openARView() {
+        guard !paths.isEmpty else { return }
+        paths = updatePathInSegmentation(path: paths, distanceLimit: 15.0)
+        
+        if let arVC = UIStoryboard(name: ARConstants.storyboardName, bundle: nil).instantiateViewController(withIdentifier: "ARViewController") as? ARViewController {
+            let model = OlaLensModel()
+            model.carLocation = destination
+            model.sectionCoordinates = paths
+            model.carRegisterNumber = "KA00421L"
+            model.carNumber = "0045"
+            model.carUpdateLabel = "Cab Arriving"
+            arVC.model = model
+            self.present(arVC, animated: true, completion: nil)
+        }
+    }
+    
+    private func updatePathInSegmentation(path : [CLLocationCoordinate2D] , distanceLimit : CLLocationDistance) -> [CLLocationCoordinate2D] {
+        guard !path.isEmpty && distanceLimit > 10 else { return path }
+        
+        var result : [CLLocationCoordinate2D] = []
+        var previous = path.first!
+        result.append(previous) // add the first co-ordinate
+        
+        for eachCoordinate in path {
+            
+            let distance = CLLocation.getDistance(coordinate1: previous, coordinate2: eachCoordinate)
+            let segment = Int(distance / distanceLimit)  // segment the distance into multiple parts and save into result
+            
+            if distance > 10 && segment > 1 {
+                
+                /* append new co-ordinates , here n = segment in below :
+                 x2 = x1 + n * delta1, delta1 = (x2 - x1) / n
+                 y2 = y1 + n * delta2, delta2 = (y2 - y1)/ n
+                 so, 2nd point (x1 + delta1, y1 + delta2) , 3rd point (x1 + 2 * delta1, y1 + 2*delta2) and so on...
+                 */
+                
+                let deltaLat = (eachCoordinate.latitude - previous.latitude)/Double(segment)
+                let deltaLng = (eachCoordinate.longitude - previous.longitude)/Double(segment)
+                
+                for i in 1..<segment { // do not add the last segment instead add the (x2,y2).
+                    let newLng = previous.longitude + Double(i) * deltaLng
+                    let newLat = previous.latitude + Double(i) * deltaLat
+                    let newCoordinate = CLLocationCoordinate2D(latitude: newLat, longitude: newLng)
+                    result.append(newCoordinate)
+                }
+            }
+            
+            result.append(eachCoordinate)
+            previous = eachCoordinate
+        }
+        return result
+    }
+    
+    private func handleGoogleMap() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        if let userLocation = appDelegate.locationManager.location?.coordinate {
+            self.googleMapSetUp(location: userLocation)
+        }
+        if self.mapView != nil {
+            self.mapView.delegate = self
+        }
+        self.title = "Tap On Map"
+    }
+    
+    private func googleMapSetUp(location : CLLocationCoordinate2D) {
+        let camera = GMSCameraPosition.camera(withLatitude: location.latitude, longitude: location.longitude, zoom: defaultZoomLabel)
+        mapView = GMSMapView.map(withFrame: self.view.bounds, camera: camera)
+        mapView.isUserInteractionEnabled = true
+        mapView.isMyLocationEnabled = true
+        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        view.addSubview(mapView)
+    }
+    
+    private func createMarker(location : CLLocationCoordinate2D, mapView : GMSMapView, markerTitle : String, snippet : String, image : UIImage? = nil, markerName : String? = nil) -> GMSMarker {
+        let marker = GMSMarker(position: location)
+        marker.title =  markerTitle
+        marker.snippet = snippet
+        if let image = image {
+            marker.icon = image
+            marker.groundAnchor = CGPoint(x: 0.5, y: 1.0)
+        }
+        if let markerName = markerName {
+            marker.userData = markerName
+        }
+        marker.map = mapView
+        return marker
+    }
+    
+    private func removeMarker(marker : GMSMarker) {
+        marker.map = nil
+    }
+    
+    private func drawPath(map : GMSMapView, pathArray : [(Double, Double)]) {
+        let path = GMSMutablePath()
+        for each in pathArray {
+            path.add(CLLocationCoordinate2D(latitude: each.0, longitude: each.1))
+        }
+        let polyline = GMSPolyline(path: path)
+        polyline.strokeColor = UIColor.blue
+        polyline.strokeWidth = polylineStokeWidth
+        polyline.geodesic = true
+        polyline.map = map
+    }
+}
+
+extension MapViewController : ShowOlaLensIntroDelegate {
+    func allowCameraClicked() {
+        openARView()
+    }
+}
+
+
+extension MapViewController : CLLocationManagerDelegate {
+    
+    private func sameLocation(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D) -> Bool  {
+        return location1.latitude == location2.latitude && location1.longitude == location2.longitude
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if mapView == nil {
+            handleGoogleMap()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .notDetermined:
+            // If status has not yet been determied, ask for authorization
+            manager.requestWhenInUseAuthorization()
+            break
+        case .authorizedWhenInUse:
+            // If authorized when in use
+            manager.startUpdatingLocation()
+            break
+        case .authorizedAlways:
+            // If always authorized
+            manager.startUpdatingLocation()
+            break
+        case .restricted:
+            // If restricted by e.g. parental controls. User can't enable Location Services
+            break
+        case .denied:
+            // If user denied your app access to Location Services, but can grant access from Settings.app
+            break
+        }
+    }
+}
+
+extension MapViewController : GMSMapViewDelegate {
+    
+    //MARK:- Create marker on long press
+    
+    func mapView(_ mapView: GMSMapView, didLongPressAt coordinate: CLLocationCoordinate2D) {
+        
+        self.dropLocationMarker?.map = nil
+        self.dropLocationMarker =  createMarker(location: coordinate, mapView: self.mapView, markerTitle: "Destination", snippet: "", image: UIImage(named: "drop-pin"))
+        
+        reachabilityCheck()
+        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else { return }
+        ARSetupUtility.shared.destination = coordinate
+        
+        if let userLocation = appDelegate.locationManager.location?.coordinate {
+            if ReachabilityHelper.isInternetAvailable() {
+                fetchRoute(source: userLocation, destination: coordinate, completionHandler: { [weak self] (polyline) in
+                    
+                    if let polyline = polyline as? GMSPolyline {
+                        
+                        // Add user location
+                        let path = GMSMutablePath()
+                        path.add(userLocation)
+                        
+                        // add rest of the  co-ordinates
+                        if let polyLinePath = polyline.path, polyLinePath.count() > 0 {
+                            for i in 0..<polyLinePath.count() {
+                                path.add(polyLinePath.coordinate(at: i))
+                            }
+                        }
+                        
+                        let updatedPolyline = GMSPolyline(path: path)
+                        updatedPolyline.strokeColor = UIColor.blue
+                        updatedPolyline.strokeWidth = self?.polylineStokeWidth ?? 5.0
+                        
+                        self?.polyline?.map = nil
+                        self?.polyline = updatedPolyline
+                        self?.polyline?.map = self?.mapView
+                        
+                        // update path and destination
+                        self?.destination = coordinate
+                        
+                        if let path = updatedPolyline.path {
+                            var polylinePath : [CLLocationCoordinate2D] = []
+                            for i in 0..<path.count()-1 {
+                                polylinePath.append(path.coordinate(at: i))
+                            }
+                            self?.paths = []
+                            self?.paths = polylinePath
+                        }
+                    }
+                })
+            }
+        }
+    }
+    
+    private func fetchRoute(source : CLLocationCoordinate2D, destination : CLLocationCoordinate2D , completionHandler : ((Any) -> ())? ) {
+        let origin = String(format: "%f,%f", source.latitude,source.longitude)
+        let destination = String(format: "%f,%f", destination.latitude,destination.longitude)
+        let directionsAPI = "https://maps.googleapis.com/maps/api/directions/json?"
+        let directionsUrlString = String(format: "%@&origin=%@&destination=%@&mode=walking",directionsAPI,origin,destination ) // walking , driving
+        
+        if let url = URL(string: directionsUrlString) {
+            
+            let fetchDirection = URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+                DispatchQueue.main.async {
+                    if error == nil && data != nil {
+                        var polyline : GMSPolyline?
+                        if let dictionary = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments ) as? [String : Any] {
+                            if let routesArray = dictionary?["routes"] as? [Any], !routesArray.isEmpty {
+                                if let routeDict = routesArray.first as? [String : Any] , !routeDict.isEmpty {
+                                    if let routeOverviewPolyline = routeDict["overview_polyline"] as? [String : Any] , !routeOverviewPolyline.isEmpty {
+                                        if let points = routeOverviewPolyline["points"] as? String {
+                                            if let path = GMSPath(fromEncodedPath: points) {
+                                                polyline = GMSPolyline(path: path)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if let polyline = polyline { completionHandler?(polyline) }
+                    } else {
+                        print("Error : \(error?.localizedDescription ?? "" )")
+                    }
+                }
+            })
+            fetchDirection.resume()
+        }
+    }
+}
+
+

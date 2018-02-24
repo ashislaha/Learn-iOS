@@ -71,29 +71,21 @@ final class ARSetupUtility : NSObject {
         let dy = location2.latitude - location1.latitude
         var theta = 0.0
         
-        if dx == 0 && dy == 0 { // same location then show the arrow down-wards , like car location
-            theta = Double.pi/2
-        } else {
-            
-            theta += atan(Double(dy/dx))
-            if dx < 0 && dy < 0 { // 3rd co-ordinate where tan is +ve
-                theta += Double.pi
-            } else if dx < 0 && dy > 0 { // 2nd coordinate where tan is -ve
-                theta += Double.pi
-            }
-            if theta == .nan {
-                theta = 3.14159265358979 / 2 // 90 Degree
-            }
-        }
+        theta += atan(Double(dy/dx))
+        print("tan-inverse theta: \(theta * 180 / Double.pi)")
         
-        print("\n\n\nprev : \(location1)")
-        print("next : \(location2)")
+        if dx < 0 && dy > 0 || dx < 0 && dy < 0 { // 2nd, 3rd coordinates, no need to add anything for 1st coordinate and 4th coordinates
+            theta += Double.pi
+        } else if theta == .nan && dy >= 0 { // dx = 0
+            theta = Double.pi/2 // 90 Degree
+        } else if theta == .nan && dy < 0 { // dx = 0
+            theta = -Double.pi/2 // -90 Degree
+        } else if theta == 0.0 && dx < 0 { // dy = 0
+            theta = Double.pi // 180 degree
+        } // else if theta == 0.0 && dx>= 0 { theta = 0.0 }
+        
         print("dx = \(dx) and dy =\(dy) Angle: \(theta * 180 / Double.pi) ")
         return theta
-    }
-    
-    public func distanceMore(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D, limit : CLLocationDistance) -> Bool { // more than 'limit' meters
-        return CLLocation(latitude: location1.latitude, longitude: location1.longitude).distance(from: CLLocation(latitude: location2.latitude, longitude: location2.longitude)) > limit
     }
     
     // rotate node
@@ -118,7 +110,16 @@ final class ARSetupUtility : NSObject {
         }
         node.rotation = SCNVector4Make(0,0,1, Float(theta))
     }
+}
+
+//MARK: Route direction calculation
+
+extension ARSetupUtility {
     
+    public func distanceMore(location1 : CLLocationCoordinate2D, location2 : CLLocationCoordinate2D, limit : CLLocationDistance) -> Bool { // more than 'limit' meters
+        return CLLocation(latitude: location1.latitude, longitude: location1.longitude).distance(from: CLLocation(latitude: location2.latitude, longitude: location2.longitude)) > limit
+    }
+
     // Get Input
     public func getInput(source : CLLocationCoordinate2D, destination : CLLocationCoordinate2D, mapView : GMSMapView, completionBlock : (([CLLocationCoordinate2D])->())?) {
         self.destination = nil

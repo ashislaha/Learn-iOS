@@ -71,6 +71,10 @@ class OlaSceneNode : LocationAnnotationNode  {
         ARSetupUtility.shared.addTexture(node: annotationNode, backward : backward)
     }
     
+    public override init(location: CLLocation?, image: UIImage) {
+        super.init(location: location, image: image)
+    }
+        
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -78,7 +82,7 @@ class OlaSceneNode : LocationAnnotationNode  {
 
 extension UIColor {
     class func getFrontSideArrowColor() -> UIColor {
-        return self.init(red: 239.0/255.0, green: 255.0/255.0, blue: 33.0/255.0, alpha: 1.0)
+        return self.init(red: 237.0/255.0, green: 252.0/255.0, blue: 41.0/255.0, alpha: 1.0)
     }
     class func getBackSideArrrowColor() -> UIColor {
         return self.init(red: 212.0/255.0, green: 219.0/255.0, blue: 40.0/255.0, alpha: 1.0)

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		807E88DB20198509000DB10E /* ARViewController+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 807E88DA20198509000DB10E /* ARViewController+extensions.swift */; };
 		80CDD12C1FC91AEE00F4425C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CDD12B1FC91AEE00F4425C /* AppDelegate.swift */; };
 		80CDD12E1FC91AEE00F4425C /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CDD12D1FC91AEE00F4425C /* ARViewController.swift */; };
 		80CDD1331FC91AEE00F4425C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80CDD1321FC91AEE00F4425C /* Assets.xcassets */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		807E88DA20198509000DB10E /* ARViewController+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARViewController+extensions.swift"; sourceTree = "<group>"; };
 		80CDD1281FC91AEE00F4425C /* Animation in AR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Animation in AR.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		80CDD12B1FC91AEE00F4425C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		80CDD12D1FC91AEE00F4425C /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				80CDD12B1FC91AEE00F4425C /* AppDelegate.swift */,
 				80CDD13D1FC91F5E00F4425C /* SceneView.swift */,
 				80CDD12D1FC91AEE00F4425C /* ARViewController.swift */,
+				807E88DA20198509000DB10E /* ARViewController+extensions.swift */,
 				80CDD13F1FC9248800F4425C /* NodeCreator.swift */,
 				80CDD1321FC91AEE00F4425C /* Assets.xcassets */,
 				80CDD1411FC9346300F4425C /* art.scnassets */,
@@ -144,6 +147,7 @@
 			files = (
 				80CDD12E1FC91AEE00F4425C /* ARViewController.swift in Sources */,
 				80CDD12C1FC91AEE00F4425C /* AppDelegate.swift in Sources */,
+				807E88DB20198509000DB10E /* ARViewController+extensions.swift in Sources */,
 				80CDD1401FC9248800F4425C /* NodeCreator.swift in Sources */,
 				80CDD13E1FC91F5E00F4425C /* SceneView.swift in Sources */,
 			);

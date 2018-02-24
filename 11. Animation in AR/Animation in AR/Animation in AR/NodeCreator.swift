@@ -39,7 +39,7 @@ class NodeCreator {
         bubbleNode.pivot = SCNMatrix4MakeTranslation( (maxBound.x - minBound.x)/2, minBound.y, Float(depth/2))
         
         // Reduce default text size
-        bubbleNode.scale = SCNVector3Make(0.2, 0.2, 0.2)
+        bubbleNode.scale = SCNVector3Make(0.5, 0.5, 0.5)
         
         let bubbleNodeParent = SCNNode()
         bubbleNodeParent.addChildNode(bubbleNode)

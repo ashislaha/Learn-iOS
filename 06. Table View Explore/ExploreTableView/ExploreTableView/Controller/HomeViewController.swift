@@ -21,6 +21,7 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView! {
         didSet {
+            tableView.backgroundColor = .red
             tableView.delegate = self
             tableView.dataSource = self
         }
